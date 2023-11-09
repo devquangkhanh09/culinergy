@@ -34,18 +34,18 @@ export const Welcome = (props: {
   useEffect(() => {
     if (home) {
       props.onNavigate(RootScreens.MAIN)
-      console.log('test')
     }
-    console.log('home')
   }, [home])
 
   return (
     <View style={styles.container}>
-      <OnboardFlow
-        pages={onboardingData.map(item => ({ imageComponent: <Onboarding {...item} /> }))}
-        onDone={() => props.onNavigate(RootScreens.MAIN)}
-        FooterComponent={(footerProps) => <OnboardingFooter onNavigate={() => setHome(true)} {...footerProps} />}
-      />
+      {!home &&
+        <OnboardFlow
+          pages={onboardingData.map(item => ({ imageComponent: <Onboarding {...item} /> }))}
+          onDone={() => props.onNavigate(RootScreens.MAIN)}
+          FooterComponent={(footerProps) => <OnboardingFooter onNavigate={() => setHome(true)} {...footerProps} />}
+        />
+      }
     </View>
   );
 };
