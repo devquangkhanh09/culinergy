@@ -22,6 +22,11 @@ export enum NavigationColors {
   PRIMARY = Colors.PRIMARY,
 }
 
+export enum OnboardingColors {
+  KEYWORD = '#57B97D',
+  SUBTITLE = '#756F6F'
+}
+
 /**
  * FontSize
  */
