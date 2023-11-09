@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Expo Redux Template",
-    "slug": "expo-redux-template",
+    "name": "Culinergy",
+    "slug": "culinergy",
     "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -35,11 +35,12 @@
     "plugins": [],
     "extra": {
       "eas": {
-        "projectId": "82716b8e-2818-4161-8a88-c571df4369a5"
+        "projectId": "347b1bad-ad18-4332-a6bd-16fd9c00e8f3"
       }
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
-    }
+    },
+    "owner": "dev_quangkhanh"
   }
 }

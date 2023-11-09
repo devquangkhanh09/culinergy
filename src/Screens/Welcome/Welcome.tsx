@@ -4,6 +4,7 @@ import { View, StyleSheet } from "react-native";
 import { RootScreens } from "..";
 import { OnboardFlow } from "react-native-onboard";
 import { Onboarding } from "@/Components/Onboarding";
+import { OnboardingFooter } from "@/Components/Onboarding/OnboardingFooter";
 
 const onboardingData = [
   {
@@ -34,6 +35,7 @@ export const Welcome = (props: {
       <OnboardFlow
         pages={onboardingData.map(item => ({ imageComponent: <Onboarding {...item} />}))}
         onDone={() => props.onNavigate(RootScreens.MAIN)}
+        FooterComponent={(props) => <OnboardingFooter {...props} />}
       />
     </View>
   );

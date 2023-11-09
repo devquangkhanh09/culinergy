@@ -20,7 +20,6 @@ export const Onboarding = (props: Props) => {
         <Text style={styles.title}>{props.title}</Text>
         <Text style={styles.keyword}>{props.keyword}</Text>
         <Text style={styles.subTitle}> {props.subtitle}</Text>
-        {/* <Button style={styles.onboardingButton}>Next</Button> */}
       </View>
     </View>
   );
@@ -44,10 +43,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     height: 336,
     borderRadius: 8,
-    bottom: 250,
+    bottom: 150,
     justifyContent: 'center',
     alignItems: 'center',
     margin: 28,
+    padding: 10,
   },
   shadowProp: {
     shadowColor: '#000000',
