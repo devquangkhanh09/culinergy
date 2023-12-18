@@ -9,9 +9,14 @@ const slice = createSlice({
         state.isFirstTime = false;
       }
     },
+    unsetFirstTime: (state) => {
+      if (!state.isFirstTime) {
+        state.isFirstTime = true;
+      }
+    },
   },
 });
 
-export const { setFirstTime } = slice.actions;
+export const { setFirstTime, unsetFirstTime } = slice.actions;
 
 export const firstTimeReducers = slice.reducer;

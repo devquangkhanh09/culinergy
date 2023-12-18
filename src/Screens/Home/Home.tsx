@@ -4,6 +4,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { HStack, Spinner, Heading } from "native-base";
 import { User } from "@/Services";
+import { useAppSelector } from "@/Hooks";
 
 export interface IHomeProps {
   data: User | undefined;
@@ -12,6 +13,9 @@ export interface IHomeProps {
 
 export const Home = (props: IHomeProps) => {
   const { data, isLoading } = props;
+
+  const user = useAppSelector((state) => state.user);
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -25,6 +29,7 @@ export const Home = (props: IHomeProps) => {
       ) : (
         <>
           <Text>{i18n.t(LocalizationKey.HOME)}</Text>
+          <Text>{`Welcome ${user.isGuest? 'Guest' : 'User'}`}</Text>
           <Heading color="primary.500" fontSize="md">
             {data?.username}
           </Heading>
