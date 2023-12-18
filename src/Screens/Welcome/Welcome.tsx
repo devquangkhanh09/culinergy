@@ -28,24 +28,19 @@ const onboardingData = [
 ];
 
 export const Welcome = (props: {
-  onNavigate: (string: RootScreens) => void;
+  navigation: {
+    navigate: (screen: RootScreens) => void;
+  }
 }) => {
-  const [home, setHome] = useState(false)
-  useEffect(() => {
-    if (home) {
-      props.onNavigate(RootScreens.MAIN)
-    }
-  }, [home])
 
+  // TODO: fix cannot navigate to login in onboarding footer
   return (
     <View style={styles.container}>
-      {!home &&
-        <OnboardFlow
-          pages={onboardingData.map(item => ({ imageComponent: <Onboarding {...item} /> }))}
-          onDone={() => props.onNavigate(RootScreens.MAIN)}
-          FooterComponent={(footerProps) => <OnboardingFooter onNavigate={() => setHome(true)} {...footerProps} />}
-        />
-      }
+      <OnboardFlow
+        pages={onboardingData.map(item => ({ imageComponent: <Onboarding {...item} /> }))}
+        onDone={() => props.navigation.navigate(RootScreens.LOGIN)}
+        FooterComponent={(footerProps) => <OnboardingFooter navigation={props.navigation} {...footerProps} />}
+      />
     </View>
   );
 };

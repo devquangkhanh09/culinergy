@@ -12,19 +12,20 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import { firstTimeReducers, homeReducers, themeReducers } from "./reducers";
+import { firstTimeReducers, homeReducers, themeReducers, userReducers } from "./reducers";
 
 const reducers = combineReducers({
   api: API.reducer,
   theme: themeReducers,
   home: homeReducers,
   firstTime: firstTimeReducers,
+  user: userReducers,
 });
 
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["theme", "first-time"],
+  whitelist: ["theme", "firstTime", "user"],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

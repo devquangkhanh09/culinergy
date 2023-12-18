@@ -3,8 +3,7 @@ import { Welcome } from "./Welcome";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/Navigation";
 import { RootScreens } from "..";
-import { TypedUseSelectorHook, useSelector } from "react-redux";
-import { RootState } from "@/Store";
+import { useAppSelector } from "@/Hooks";
 
 type WelcomeScreenNavigatorProps = NativeStackScreenProps<
   RootStackParamList,
@@ -14,16 +13,12 @@ type WelcomeScreenNavigatorProps = NativeStackScreenProps<
 export const WelcomeContainer = ({
   navigation,
 }: WelcomeScreenNavigatorProps) => {
-  const onNavigate = (screen: RootScreens) => {
-    navigation.navigate(screen);
-  };
-
-  const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
   const isFirstTime = useAppSelector((state) => state.firstTime.isFirstTime)
   useEffect(() => {
     if (!isFirstTime) {
-      onNavigate(RootScreens.MAIN)
+      navigation.navigate(RootScreens.LOGIN)
     }
-  }, [])
-  return <Welcome onNavigate={onNavigate} />;
+  }, [isFirstTime])
+
+  return <Welcome navigation={navigation} />;
 };
