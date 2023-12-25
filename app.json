@@ -15,9 +15,7 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/347b1bad-ad18-4332-a6bd-16fd9c00e8f3"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.hpcc.expo-redux-template"
