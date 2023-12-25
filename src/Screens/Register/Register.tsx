@@ -17,6 +17,7 @@ export const Register = ({
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const dispatch = useAppDispatch()
 
@@ -67,8 +68,8 @@ export const Register = ({
             style={{ ...styles.text, marginBottom: 30 }}
             placeholder="Confirm Password"
             secureTextEntry
-            value={password}
-            onChangeText={setPassword}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
           />
           <View style={{ alignItems: 'center' }}>
             <Pressable
