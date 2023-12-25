@@ -3,6 +3,7 @@ export enum RootScreens {
   WELCOME = 'Welcome',
   LOGIN = 'Login',
   REGISTER = 'Register',
+  INGREDIENTS = 'Ingredients',
 }
 
 export enum MainScreens {

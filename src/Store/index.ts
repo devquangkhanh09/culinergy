@@ -1,7 +1,7 @@
-import { API } from "@/Services/base";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { setupListeners } from "@reduxjs/toolkit/query";
+import { API } from '@/Services/base';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { setupListeners } from '@reduxjs/toolkit/query';
 import {
   persistReducer,
   persistStore,
@@ -11,8 +11,14 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-} from "redux-persist";
-import { firstTimeReducers, homeReducers, themeReducers, userReducers } from "./reducers";
+} from 'redux-persist';
+import {
+  firstTimeReducers,
+  homeReducers,
+  themeReducers,
+  userReducers,
+} from './reducers';
+import { cameraReducers } from './reducers/camera';
 
 const reducers = combineReducers({
   api: API.reducer,
@@ -20,12 +26,13 @@ const reducers = combineReducers({
   home: homeReducers,
   firstTime: firstTimeReducers,
   user: userReducers,
+  camera: cameraReducers,
 });
 
 const persistConfig = {
-  key: "root",
+  key: 'root',
   storage: AsyncStorage,
-  whitelist: ["theme", "firstTime", "user"],
+  whitelist: ['theme', 'firstTime', 'user'],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
@@ -52,6 +59,6 @@ const persistor = persistStore(store);
 
 setupListeners(store.dispatch);
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 export { store, persistor };

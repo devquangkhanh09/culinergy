@@ -1,24 +1,28 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Alert,
-  ImageBackground,
-  Image,
-} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
-import CameraPreview from '../CameraPreview/CameraPreview';
+import CameraPreview from './CameraPreview';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@/Navigation';
+import { RootScreens } from '..';
+import { useAppDispatch } from '@/Hooks';
+import { setImage } from '@/Store/reducers/camera';
 
-let camera: Camera;
-export default function CameraScreen() {
+type CameraScreenNavigatorProps = NativeStackScreenProps<
+  RootStackParamList,
+  RootScreens.INGREDIENTS
+>;
+
+export default function CameraScreen({
+  navigation,
+}: CameraScreenNavigatorProps) {
+  var camera: Camera;
   const [startCamera, setStartCamera] = React.useState(false);
   const [previewVisible, setPreviewVisible] = React.useState(false);
   const [capturedImage, setCapturedImage] = React.useState<any>(null);
   const [cameraType, setCameraType] = React.useState<any>('back');
-  const [flashMode, setFlashMode] = React.useState<any>('off');
+  const dispatch = useAppDispatch();
 
   const __startCamera = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
@@ -36,21 +40,16 @@ export default function CameraScreen() {
     //setStartCamera(false)
     setCapturedImage(photo);
   };
-  const __savePhoto = () => {};
+  const __savePhoto = () => {
+    navigation.navigate(RootScreens.INGREDIENTS);
+    dispatch(setImage(capturedImage));
+  };
   const __retakePicture = () => {
     setCapturedImage(null);
     setPreviewVisible(false);
     __startCamera();
   };
-  const __handleFlashMode = () => {
-    if (flashMode === 'on') {
-      setFlashMode('off');
-    } else if (flashMode === 'off') {
-      setFlashMode('on');
-    } else {
-      setFlashMode('auto');
-    }
-  };
+
   const __switchCamera = () => {
     if (cameraType === 'back') {
       setCameraType('front');
@@ -75,7 +74,6 @@ export default function CameraScreen() {
           ) : (
             <Camera
               type={cameraType}
-              flashMode={flashMode}
               style={{ flex: 1 }}
               ref={(r) => {
                 if (r) camera = r;
@@ -95,21 +93,6 @@ export default function CameraScreen() {
                     flexDirection: 'column',
                     justifyContent: 'space-between',
                   }}>
-                  <TouchableOpacity
-                    onPress={__handleFlashMode}
-                    style={{
-                      backgroundColor: flashMode === 'off' ? '#000' : '#fff',
-                      borderRadius: 25,
-                      height: 25,
-                      width: 25,
-                    }}>
-                    <Text
-                      style={{
-                        fontSize: 20,
-                      }}>
-                      ⚡️
-                    </Text>
-                  </TouchableOpacity>
                   <TouchableOpacity
                     onPress={__switchCamera}
                     style={{
