@@ -2,14 +2,20 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeContainer } from '@/Screens/Home';
 import { Settings } from '@/Screens/Settings';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { MainScreens } from '@/Screens';
 import Camera from '@/Screens/Camera/Camera';
+import { Explore } from '@/Screens/Explore';
+import { Favorites } from '@/Screens/Favorites';
+import { Colors } from '@/Theme/Variables';
+import { View } from 'react-native';
 
 export type MainNavigatorProps = {
   [MainScreens.HOME]: undefined;
   [MainScreens.SETTINGS]: undefined;
   [MainScreens.CAMERA]: undefined;
+  [MainScreens.EXPLORE]: undefined;
+  [MainScreens.FAVORITES]: undefined;
 };
 
 const Tab = createBottomTabNavigator<MainNavigatorProps>();
@@ -17,13 +23,37 @@ const Tab = createBottomTabNavigator<MainNavigatorProps>();
 // @refresh reset
 export const MainNavigator = () => {
   return (
-    <Tab.Navigator id="main" screenOptions={{ headerShown: false }}>
+    <Tab.Navigator 
+      id="main" 
+      screenOptions={{ 
+        headerStyle: {
+          backgroundColor: Colors.PRIMARY_DARK,
+        },
+        headerTintColor: Colors.WHITE,
+        headerTitleStyle: {
+          fontSize: 24,
+          fontWeight: 'bold',
+        },
+        tabBarActiveTintColor: Colors.PRIMARY_DARK,
+      }}
+    >
       <Tab.Screen
         name={MainScreens.HOME}
         component={HomeContainer}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="home" color={color} size={size} />
+          tabBarIcon: ({ focused, color, size }) => (
+            <Icon name={focused? 'home':'home-outline'} color={color} size={size} />
+          ),
+          tabBarLabelPosition: 'below-icon',
+        }}
+      />
+
+      <Tab.Screen
+        name={MainScreens.EXPLORE}
+        component={Explore}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <Icon name={focused? 'search':'search-outline'} color={color} size={size} />
           ),
           tabBarLabelPosition: 'below-icon',
         }}
@@ -33,8 +63,32 @@ export const MainNavigator = () => {
         name={MainScreens.CAMERA}
         component={Camera}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="camera-alt" color={color} size={size} />
+          tabBarIcon: ({ focused, color, size }) => (
+            <View style={{ position: 'absolute', top: -30, alignItems: 'center' }}>
+              <View style={{ 
+                backgroundColor: 'white', 
+                width: 70, 
+                height: 70, 
+                borderRadius: 35,
+                borderWidth: 5,
+                borderColor: Colors.PRIMARY,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+                <Icon name={focused? 'scan':'scan-outline'} color={color} size={size} />
+              </View>
+            </View>
+          ),
+          tabBarLabel: () => null,
+        }}
+      />
+
+      <Tab.Screen
+        name={MainScreens.FAVORITES}
+        component={Favorites}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => (
+            <Icon name={focused? 'heart':'heart-outline'} color={color} size={size} />
           ),
           tabBarLabelPosition: 'below-icon',
         }}
@@ -44,8 +98,8 @@ export const MainNavigator = () => {
         name={MainScreens.SETTINGS}
         component={Settings}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="settings" color={color} size={size} />
+          tabBarIcon: ({ focused, color, size }) => (
+            <Icon name={focused? 'settings':'settings-outline'} color={color} size={size} />
           ),
           tabBarLabelPosition: 'below-icon',
         }}

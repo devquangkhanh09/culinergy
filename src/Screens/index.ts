@@ -10,4 +10,6 @@ export enum MainScreens {
   HOME = 'Home',
   SETTINGS = 'Settings',
   CAMERA = 'Camera',
+  EXPLORE = 'Explore',
+  FAVORITES = 'Favorites',
 }
