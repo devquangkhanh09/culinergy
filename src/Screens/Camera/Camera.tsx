@@ -3,16 +3,15 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import CameraPreview from './CameraPreview';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '@/Navigation';
-import { RootScreens } from '..';
+import { MainScreens, RootScreens } from '..';
 import { useAppDispatch } from '@/Hooks';
 import { setImage } from '@/Store/reducers/camera';
 
-type CameraScreenNavigatorProps = NativeStackScreenProps<
-  RootStackParamList,
-  RootScreens.INGREDIENTS
->;
+type CameraScreenNavigatorProps = {
+  navigation: {
+    navigate: (screen: RootScreens | MainScreens) => void;
+  };
+}
 
 export default function CameraScreen({
   navigation,

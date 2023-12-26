@@ -12,8 +12,11 @@ export enum Colors {
   TRANSPARENT = "rgba(0,0,0,0)",
   INPUT_BACKGROUND = "#FFFFFF",
   WHITE = "#ffffff",
+  BACKGROUND = "#F0F0F0",
   TEXT = "#212529",
-  PRIMARY = "#E14032",
+  PRIMARY = "#57B97D",
+  PRIMARY_DARK = "#0E1E22",
+  SECONDARY = "#756F6F",
   SUCCESS = "#28a745",
   ERROR = "#dc3545",
 }
