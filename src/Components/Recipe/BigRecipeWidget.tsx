@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Dimensions, Image, Pressable, StyleSheet, Text, View } from "react-native"
+import { Dimensions, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import Icon from 'react-native-vector-icons/Ionicons';
+import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 var maxWidth = Dimensions.get('window').width;
-
-const heartFull = require('../../../assets/recipe/heart-full.png')
-const heartEmpty = require('../../../assets/recipe/heart-empty.png')
 
 export const BigRecipeWidget = ({ data }: { data: any }) => {
   const [recipeData, setRecipeData] = useState(data)
@@ -23,17 +22,17 @@ export const BigRecipeWidget = ({ data }: { data: any }) => {
         }}>
         <Text style={{ fontSize: 15, fontWeight: '700' }}>{recipeData.name}</Text>
         <Pressable onPress={() => setRecipeData({ ...recipeData, isLike: !recipeData.isLike })}>
-          <Image source={recipeData.isLike ? heartFull : heartEmpty} style={{ width: 20, height: 20 }} />
+          <Icon name={recipeData.isLike ? 'heart' : 'heart-outline'} size={20} color={recipeData.isLike ? '#FF0000' : '#000000'} />
         </Pressable>
       </View>
       <Text style={{ marginHorizontal: 20 }}>Tasty traditional dish. Not only for Italian who when to Malta</Text>
       <View style={{ flexDirection: 'row', height: 40, alignItems: 'center' }}>
         <View style={{ flexDirection: 'row', width: '50%', justifyContent: 'center', borderRightWidth: 1 }}>
-          <Image source={require('../../../assets/recipe/time.png')} style={{ width: 20, height: 20, marginRight: 20 }} />
+          <Icon name='time-outline' size={20} color='#000000' style={{ marginRight: 20 }} />
           <Text style={{ fontWeight: '700' }}>15 mins</Text>
         </View>
         <View style={{ flexDirection: 'row', width: '50%', justifyContent: 'center' }}>
-          <Image source={require('../../../assets/recipe/cook.png')} style={{ width: 20, height: 20, marginRight: 20 }} />
+          <MCIcon name='chef-hat' size={20} color='#000000' style={{ marginRight: 20 }} />
           <Text style={{ fontWeight: '700', color: '#57B97D' }}>69 cooked</Text>
         </View>
       </View>
