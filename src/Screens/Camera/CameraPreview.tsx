@@ -78,7 +78,7 @@ const CameraPreview = ({
                 onPress={savePhoto}
                 style={{
                   padding: 10,
-                  backgroundColor: 'green',
+                  backgroundColor: '#57B97D',
                   borderRadius: 10,
                   alignItems: 'center',
                 }}>
@@ -87,7 +87,7 @@ const CameraPreview = ({
                     color: '#fff',
                     fontSize: 20,
                   }}>
-                  save photo
+                  Save photo
                 </Text>
               </TouchableOpacity>
             </View>
