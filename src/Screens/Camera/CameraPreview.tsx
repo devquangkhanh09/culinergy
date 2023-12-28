@@ -1,23 +1,22 @@
 import { View, Text, ImageBackground, TouchableOpacity } from 'react-native';
 import React from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const CameraPreview = ({
   photo,
   retakePicture,
   savePhoto,
   isDisable,
-  width,
-  height,
-  padding,
+  backToScreen,
 }: any) => {
   return (
     <View
       style={{
         backgroundColor: 'transparent',
         flex: 1,
-        width: width || '100%',
-        height: height || '100%',
-        padding: padding || 0,
+        width: '100%',
+        height: '100%',
+        padding: 0,
       }}>
       <ImageBackground
         source={{ uri: photo && photo.uri }}
@@ -31,6 +30,28 @@ const CameraPreview = ({
             padding: 15,
             justifyContent: 'flex-end',
           }}>
+          <View
+            style={{
+              position: 'absolute',
+              left: '5%',
+              top: '5%',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+            }}>
+            <TouchableOpacity
+              onPress={backToScreen}
+              style={{
+                marginTop: 20,
+                borderRadius: 25,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                height: 40,
+                width: 40,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Icon name="chevron-left" size={20} color="#FFF" />
+            </TouchableOpacity>
+          </View>
           {!isDisable && (
             <View
               style={{
@@ -40,11 +61,10 @@ const CameraPreview = ({
               <TouchableOpacity
                 onPress={retakePicture}
                 style={{
-                  width: 130,
-                  height: 40,
-
+                  padding: 10,
+                  backgroundColor: 'red',
+                  borderRadius: 10,
                   alignItems: 'center',
-                  borderRadius: 4,
                 }}>
                 <Text
                   style={{
@@ -57,11 +77,10 @@ const CameraPreview = ({
               <TouchableOpacity
                 onPress={savePhoto}
                 style={{
-                  width: 130,
-                  height: 40,
-
+                  padding: 10,
+                  backgroundColor: 'green',
+                  borderRadius: 10,
                   alignItems: 'center',
-                  borderRadius: 4,
                 }}>
                 <Text
                   style={{
