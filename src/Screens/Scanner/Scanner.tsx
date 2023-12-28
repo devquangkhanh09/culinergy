@@ -3,12 +3,12 @@ import React from 'react';
 import { useAppSelector } from '@/Hooks';
 import CameraPreview from '../Camera/CameraPreview';
 
-export default function Ingredients() {
+export default function ScannerScreen() {
   const camera = useAppSelector((state) => state.camera);
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Ingredients Detect</Text>
-      <CameraPreview photo={camera.imageUrl} isDisable={true} padding={50} />
+      <CameraPreview photo={camera.imageUrl} isDisable={true} />
     </View>
   );
 }

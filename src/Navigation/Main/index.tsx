@@ -9,6 +9,7 @@ import { Explore } from '@/Screens/Explore';
 import { Favorites } from '@/Screens/Favorites';
 import { Colors } from '@/Theme/Variables';
 import { View } from 'react-native';
+import { CameraStackScreen } from '../CameraNavigation/CameraNavigation';
 
 export type MainNavigatorProps = {
   [MainScreens.HOME]: undefined;
@@ -68,7 +69,7 @@ export const MainNavigator = () => {
 
       <Tab.Screen
         name={MainScreens.CAMERA}
-        component={Camera}
+        component={CameraStackScreen}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <View

@@ -1,12 +1,22 @@
-import { RootScreens } from '@/Screens';
+import { AuthScreens, RootScreens } from '@/Screens';
 import React, { FC } from 'react';
-import { KeyboardAvoidingView, StyleProp, StyleSheet, ViewStyle, TextStyle, Button, Touchable, TouchableOpacity, Text } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+  TextStyle,
+  Button,
+  Touchable,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import { FooterProps } from 'react-native-onboard/lib/OnboardFlow/Footer';
 
 interface Props extends FooterProps {
   navigation: {
-    navigate: (screen: RootScreens) => void
-  }
+    navigate: (screen: AuthScreens) => void;
+  };
 }
 
 export const OnboardingFooter: FC<Props> = ({
@@ -26,17 +36,18 @@ export const OnboardingFooter: FC<Props> = ({
 }) => {
   function getPrimaryButtonTitle() {
     if (pages && pages[currentPage] && pages[currentPage].primaryButtonTitle) {
-      return pages[currentPage].primaryButtonTitle
+      return pages[currentPage].primaryButtonTitle;
     }
-    return pages?.length! - 1 === currentPage
-      ? 'Get Started'
-      : 'Next'
+    return pages?.length! - 1 === currentPage ? 'Get Started' : 'Next';
   }
 
-  const totalPages = pages?.length ?? 0
+  const totalPages = pages?.length ?? 0;
 
   return (
-    <KeyboardAvoidingView behavior="position" style={[defaultStyles.view, style]} {...props}>
+    <KeyboardAvoidingView
+      behavior="position"
+      style={[defaultStyles.view, style]}
+      {...props}>
       <Components.PrimaryButtonComponent
         text={getPrimaryButtonTitle()}
         currentPage={currentPage}
@@ -56,18 +67,17 @@ export const OnboardingFooter: FC<Props> = ({
 
       <TouchableOpacity
         activeOpacity={0.8}
-        style={{ position: 'absolute', bottom: 0, right: 15}}
-        onPress={() => props.navigation.navigate(RootScreens.LOGIN)}
-      >
+        style={{ position: 'absolute', bottom: 0, right: 15 }}
+        onPress={() => props.navigation.navigate(AuthScreens.LOGIN)}>
         <Text style={{ color: '#57B97D' }}>Skip</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
-  )
-}
+  );
+};
 
 const defaultStyles = StyleSheet.create({
   view: {
     backgroundColor: 'transparent',
     maxHeight: 70,
-  }
-})
+  },
+});

@@ -1,24 +1,25 @@
-import React, { useEffect } from "react";
-import { Welcome } from "./Welcome";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "@/Navigation";
-import { RootScreens } from "..";
-import { useAppSelector } from "@/Hooks";
+import React, { useEffect } from 'react';
+import { Welcome } from './Welcome';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { AuthScreens } from '..';
+import { useAppSelector } from '@/Hooks';
+import { AuthStackParamList } from '@/Navigation/AuthNavigation/AuthNavigation';
 
 type WelcomeScreenNavigatorProps = NativeStackScreenProps<
-  RootStackParamList,
-  RootScreens.WELCOME
+  AuthStackParamList,
+  AuthScreens.WELCOME
 >;
 
 export const WelcomeContainer = ({
   navigation,
 }: WelcomeScreenNavigatorProps) => {
-  const isFirstTime = useAppSelector((state) => state.firstTime.isFirstTime)
+  const isFirstTime = useAppSelector((state) => state.firstTime.isFirstTime);
+
   useEffect(() => {
     if (!isFirstTime) {
-      navigation.navigate(RootScreens.LOGIN)
+      navigation.navigate(AuthScreens.LOGIN);
     }
-  }, [isFirstTime])
+  }, [isFirstTime, navigation]);
 
   return <Welcome navigation={navigation} />;
 };

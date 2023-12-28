@@ -1,9 +1,17 @@
 export enum RootScreens {
   MAIN = 'Main',
-  WELCOME = 'Welcome',
+  AUTH = 'Auth',
+}
+
+export enum AuthScreens {
   LOGIN = 'Login',
+  WELCOME = 'Welcome',
   REGISTER = 'Register',
-  INGREDIENTS = 'Ingredients',
+}
+
+export enum CameraScreens {
+  SCANNER = 'Scanner',
+  SCANNER_RESULT = 'ScannerResult',
 }
 
 export enum MainScreens {
