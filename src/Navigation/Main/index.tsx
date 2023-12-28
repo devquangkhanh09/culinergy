@@ -23,9 +23,9 @@ const Tab = createBottomTabNavigator<MainNavigatorProps>();
 // @refresh reset
 export const MainNavigator = () => {
   return (
-    <Tab.Navigator 
-      id="main" 
-      screenOptions={{ 
+    <Tab.Navigator
+      id="main"
+      screenOptions={{
         headerStyle: {
           backgroundColor: Colors.PRIMARY_DARK,
         },
@@ -35,14 +35,17 @@ export const MainNavigator = () => {
           fontWeight: 'bold',
         },
         tabBarActiveTintColor: Colors.PRIMARY_DARK,
-      }}
-    >
+      }}>
       <Tab.Screen
         name={MainScreens.HOME}
         component={HomeContainer}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <Icon name={focused? 'home':'home-outline'} color={color} size={size} />
+            <Icon
+              name={focused ? 'home' : 'home-outline'}
+              color={color}
+              size={size}
+            />
           ),
           tabBarLabelPosition: 'below-icon',
         }}
@@ -53,7 +56,11 @@ export const MainNavigator = () => {
         component={Explore}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <Icon name={focused? 'search':'search-outline'} color={color} size={size} />
+            <Icon
+              name={focused ? 'search' : 'search-outline'}
+              color={color}
+              size={size}
+            />
           ),
           tabBarLabelPosition: 'below-icon',
         }}
@@ -64,22 +71,30 @@ export const MainNavigator = () => {
         component={Camera}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <View style={{ position: 'absolute', top: -30, alignItems: 'center' }}>
-              <View style={{ 
-                backgroundColor: 'white', 
-                width: 70, 
-                height: 70, 
-                borderRadius: 35,
-                borderWidth: 5,
-                borderColor: Colors.PRIMARY,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-                <Icon name={focused? 'scan':'scan-outline'} color={color} size={size} />
+            <View
+              style={{ position: 'absolute', top: -30, alignItems: 'center' }}>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  width: 70,
+                  height: 70,
+                  borderRadius: 35,
+                  borderWidth: 5,
+                  borderColor: Colors.PRIMARY,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Icon
+                  name={focused ? 'scan' : 'scan-outline'}
+                  color={color}
+                  size={size}
+                />
               </View>
             </View>
           ),
           tabBarLabel: () => null,
+          headerShown: false,
+          tabBarStyle: { display: 'none' },
         }}
       />
 
@@ -88,7 +103,11 @@ export const MainNavigator = () => {
         component={Favorites}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <Icon name={focused? 'heart':'heart-outline'} color={color} size={size} />
+            <Icon
+              name={focused ? 'heart' : 'heart-outline'}
+              color={color}
+              size={size}
+            />
           ),
           tabBarLabelPosition: 'below-icon',
         }}
@@ -99,7 +118,11 @@ export const MainNavigator = () => {
         component={Settings}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
-            <Icon name={focused? 'settings':'settings-outline'} color={color} size={size} />
+            <Icon
+              name={focused ? 'settings' : 'settings-outline'}
+              color={color}
+              size={size}
+            />
           ),
           tabBarLabelPosition: 'below-icon',
         }}
