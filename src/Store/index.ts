@@ -19,6 +19,7 @@ import {
   userReducers,
 } from './reducers';
 import { cameraReducers } from './reducers/camera';
+import { exploreReducers } from './reducers/explore';
 
 const reducers = combineReducers({
   api: API.reducer,
@@ -27,6 +28,7 @@ const reducers = combineReducers({
   firstTime: firstTimeReducers,
   user: userReducers,
   camera: cameraReducers,
+  explore: exploreReducers,
 });
 
 const persistConfig = {

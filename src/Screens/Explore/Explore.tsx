@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
-import { useAppDispatch } from "@/Hooks";
-import { setToken, unsetFirstTime } from '@/Store/reducers';
+import { View, Text, Button, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { useAppSelector, useAppDispatch } from "@/Hooks";
+import { toggleIngredient } from '@/Store/reducers';
 import { MainScreens, RootScreens } from '..';
 import SearchInput from '@/Components/Input/SearchInput';
 import RemovableChip from '@/Components/Input/RemovableChip';
 import SimpleRecipeWidget from '@/Components/Recipe/SimpleRecipeWidget';
+import SelectionModal from '@/Components/Modal/SelectionModal';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Colors } from '@/Theme/Variables';
 
@@ -23,6 +24,10 @@ const sampleIngredients = [
   'Shrimp',
   'Egg',
   'Milk',
+  'Cheese',
+  'Potato',
+  'Carrot',
+  'Tomato',
 ]
 
 const sampleRecipes = [
@@ -46,6 +51,15 @@ const sampleRecipes = [
 export const Explore = ({
   navigation,
 }: ExploreScreenNavigatorProps) => {
+  const [isIngredientModalVisible, setIsIngredientModalVisible] = useState(false);
+  
+  const selectedIngredients = useAppSelector(state => state.explore.selectedIngredients);
+  const dispatch = useAppDispatch();
+
+  const handleSelectionComplete = () => {
+    setIsIngredientModalVisible(false);
+  };
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -55,16 +69,27 @@ export const Explore = ({
           onSearch={(text) => console.log(text)}
         />
 
+        <SelectionModal
+          isVisible={isIngredientModalVisible}
+          title='Select ingredients'
+          options={sampleIngredients}
+          storeKey='explore'
+          reducer={toggleIngredient}
+          onSelectionComplete={handleSelectionComplete}
+        />
+
         <Text style={styles.subheader}>Ingredients</Text>
         <View style={styles.ingredientsContainer}>
-          <View style={styles.ingredientsAddBtn}>
-            <Icon name='add' size={20} color='#fff' />
-          </View>
-          {sampleIngredients.map((ingredient, idx) => (
+          <Pressable onPress={() => setIsIngredientModalVisible(true)}>
+            <View style={styles.ingredientsAddBtn}>
+              <Icon name='add' size={20} color='#fff' />
+            </View>
+          </Pressable>
+          {selectedIngredients.map((ingredient, idx) => (
             <RemovableChip
               key={idx}
               text={ingredient}
-              onRemove={(value) => console.log(value)}
+              onRemove={(value) => dispatch(toggleIngredient(value))}
             />
           ))}
         </View>
