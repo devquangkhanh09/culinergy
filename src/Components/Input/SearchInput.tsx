@@ -1,3 +1,4 @@
+import { Colors } from '@/Theme/Variables';
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
@@ -16,10 +17,11 @@ const SearchInput: React.FC<SearchInputProps> = ({ placeholder, prefixIcon, onSe
   };
 
   return (
-    <View style={{ position: 'relative' }}>
+    <View style={styles.container}>
       <TextInput
         style={styles.input}
         placeholder={placeholder}
+        placeholderTextColor={Colors.GRAY}
         value={value}
         onChangeText={handleInputChange}
       />
@@ -31,6 +33,10 @@ const SearchInput: React.FC<SearchInputProps> = ({ placeholder, prefixIcon, onSe
 };
 
 const styles = StyleSheet.create({
+  container: {
+    position: 'relative',
+    marginBottom: 10,
+  },
   input: {
     height: 50,
     borderWidth: 1,
