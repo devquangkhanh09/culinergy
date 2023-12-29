@@ -3,12 +3,15 @@ import { View, Image, StyleSheet, Dimensions, Text } from 'react-native';
 import { useAppSelector } from '@/Hooks';
 import IngredientsList from '@/Components/IngredientsList/IngredientsList';
 import CustomButton from '@/Components/Button/Button';
+import { useNavigation } from '@react-navigation/native';
+import { CameraScreens } from '..';
 
 export default function ScannerScreen() {
   const camera = useAppSelector((state) => state.camera);
   const screenHeight = Dimensions.get('window').height;
   const targetHeight = screenHeight * 0.4;
   const imageUrl = camera.imageUrl.uri;
+  const navigator = useNavigation<any>();
 
   const ingredients = [
     {
@@ -56,7 +59,11 @@ export default function ScannerScreen() {
         </View>
         <IngredientsList dataSource={ingredients} />
       </View>
-      <CustomButton title="See Recipes" style={styles.customButton} />
+      <CustomButton
+        title="See Recipes"
+        style={styles.customButton}
+        onPress={() => navigator.navigate(CameraScreens.RECOMMENDATION)}
+      />
     </View>
   );
 }

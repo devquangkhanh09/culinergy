@@ -1,3 +1,5 @@
+import { CameraScreens } from '@/Screens';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
   View,
@@ -6,6 +8,7 @@ import {
   Text,
   StyleSheet,
   Dimensions,
+  Pressable,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -20,12 +23,20 @@ interface IngredientsProps {
 }
 
 const IngredientsList = ({ dataSource }: IngredientsProps) => {
+  const navigator = useNavigation<any>();
   const renderItem = ({ item }: { item: DataSource }) => (
-    <View style={styles.card}>
+    <Pressable
+      onPress={() => navigator.navigate(CameraScreens.INGREDIENT_DETAIL)}
+      style={({ pressed }) => [
+        styles.card,
+        {
+          backgroundColor: pressed ? '#ddd' : '#fff',
+        },
+      ]}>
       <Image source={{ uri: item.image }} style={styles.image} />
       <Text style={styles.name}>{item.name}</Text>
       <Icon name="chevron-right" size={20} color="gray" />
-    </View>
+    </Pressable>
   );
 
   return (
