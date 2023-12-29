@@ -24,3 +24,7 @@ export enum MainScreens {
   EXPLORE = 'Explore',
   FAVORITES = 'Favorites',
 }
+
+export enum SettingsScreens {
+  CHANGE_PASSWORD = 'Change password',
+}
