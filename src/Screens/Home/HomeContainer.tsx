@@ -1,10 +1,10 @@
-import { Home } from "./Home";
-import React, { useState, useEffect } from "react";
-import { useLazyGetUserQuery } from "@/Services";
-import { ScrollView } from "react-native";
+import { Home } from './Home';
+import React, { useState, useEffect } from 'react';
+import { useLazyGetUserQuery } from '@/Services';
+import { ScrollView } from 'react-native';
 
 export const HomeContainer = () => {
-  const [userId, setUserId] = useState("9");
+  const [userId, setUserId] = useState('9');
 
   const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] =
     useLazyGetUserQuery();
