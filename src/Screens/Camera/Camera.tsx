@@ -51,10 +51,6 @@ export default function CameraScreen({
     __startCamera();
   };
 
-  const backToScreen = () => {
-    navigation.navigate(MainScreens.HOME);
-  };
-
   return (
     <View style={styles.container}>
       <View
@@ -67,7 +63,6 @@ export default function CameraScreen({
             photo={capturedImage}
             savePhoto={__savePhoto}
             retakePicture={__retakePicture}
-            backToScreen={backToScreen}
           />
         ) : (
           <Camera
@@ -83,28 +78,6 @@ export default function CameraScreen({
                 backgroundColor: 'transparent',
                 flexDirection: 'row',
               }}>
-              <View
-                style={{
-                  position: 'absolute',
-                  left: '5%',
-                  top: '5%',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                }}>
-                <TouchableOpacity
-                  onPress={backToScreen}
-                  style={{
-                    marginTop: 20,
-                    borderRadius: 25,
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    height: 40,
-                    width: 40,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Icon name="chevron-left" size={20} color="#FFF" />
-                </TouchableOpacity>
-              </View>
               <View
                 style={{
                   position: 'absolute',

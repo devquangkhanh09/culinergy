@@ -1,14 +1,7 @@
 import { View, Text, ImageBackground, TouchableOpacity } from 'react-native';
 import React from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
-const CameraPreview = ({
-  photo,
-  retakePicture,
-  savePhoto,
-  isDisable,
-  backToScreen,
-}: any) => {
+const CameraPreview = ({ photo, retakePicture, savePhoto, isDisable }: any) => {
   return (
     <View
       style={{
@@ -30,31 +23,6 @@ const CameraPreview = ({
             padding: 15,
             justifyContent: 'flex-end',
           }}>
-          {backToScreen && (
-            <View
-              style={{
-                position: 'absolute',
-                left: '5%',
-                top: '5%',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              }}>
-              <TouchableOpacity
-                onPress={backToScreen}
-                style={{
-                  marginTop: 20,
-                  borderRadius: 25,
-                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                  height: 40,
-                  width: 40,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Icon name="chevron-left" size={20} color="#FFF" />
-              </TouchableOpacity>
-            </View>
-          )}
-
           {!isDisable && (
             <View
               style={{
