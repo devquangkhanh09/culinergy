@@ -5,6 +5,10 @@ import { AuthScreens, RootScreens } from '..';
 import { OnboardFlow } from 'react-native-onboard';
 import { Onboarding } from '@/Components/Onboarding';
 import { OnboardingFooter } from '@/Components/Onboarding/OnboardingFooter';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { AuthStackParamList } from '@/Navigation/AuthNavigation/AuthNavigation';
+import { useAppDispatch } from '@/Hooks';
+import { setFirstTime } from '@/Store/reducers';
 
 const onboardingData = [
   {
@@ -30,21 +34,28 @@ const onboardingData = [
   },
 ];
 
-export const Welcome = (props: {
-  navigation: {
-    navigate: (screen: AuthScreens) => void;
+type WelcomeScreenNavigatorProps = NativeStackScreenProps<
+  AuthStackParamList,
+  AuthScreens.WELCOME
+>;
+
+export const Welcome = ({ navigation }: WelcomeScreenNavigatorProps) => {
+  const dispatch = useAppDispatch();
+
+  const handleOnDone = () => {
+    dispatch(setFirstTime());
+    navigation.navigate(AuthScreens.LOGIN);
   };
-}) => {
-  // TODO: fix cannot navigate to login in onboarding footer
+
   return (
     <View style={styles.container}>
       <OnboardFlow
         pages={onboardingData.map((item) => ({
           imageComponent: <Onboarding {...item} />,
         }))}
-        onDone={() => props.navigation.navigate(AuthScreens.LOGIN)}
+        onDone={handleOnDone}
         FooterComponent={(footerProps) => (
-          <OnboardingFooter navigation={props.navigation} {...footerProps} />
+          <OnboardingFooter onDone={handleOnDone} {...footerProps} />
         )}
       />
     </View>

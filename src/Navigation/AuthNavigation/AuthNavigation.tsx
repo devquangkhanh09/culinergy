@@ -4,7 +4,7 @@ import { Login } from '@/Screens/Login';
 import { Register } from '@/Screens/Register';
 import { AuthScreens, RootScreens } from '@/Screens';
 import { MainNavigator } from '../Main';
-import { WelcomeContainer } from '@/Screens/Welcome';
+import { Welcome } from '@/Screens/Welcome';
 
 export type AuthStackParamList = {
   [AuthScreens.LOGIN]: undefined;
@@ -21,10 +21,7 @@ export const AuthStackScreen = () => {
       <AuthStack.Screen name={AuthScreens.LOGIN} component={Login} />
       <AuthStack.Screen name={AuthScreens.REGISTER} component={Register} />
       <AuthStack.Screen name={RootScreens.MAIN} component={MainNavigator} />
-      <AuthStack.Screen
-        name={AuthScreens.WELCOME}
-        component={WelcomeContainer}
-      />
+      <AuthStack.Screen name={AuthScreens.WELCOME} component={Welcome} />
     </AuthStack.Navigator>
   );
 };
