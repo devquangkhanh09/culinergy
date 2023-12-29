@@ -11,7 +11,10 @@ export enum AuthScreens {
 
 export enum CameraScreens {
   SCANNER = 'Scanner',
-  SCANNER_RESULT = 'ScannerResult',
+  SCANNER_RESULT = 'Scanner Result',
+  RECOMMENDATION = 'Recommendation',
+  INGREDIENT_DETAIL = 'Ingredient Detail',
+  RECIPE_DETAIL = 'Recipe Detail',
 }
 
 export enum MainScreens {

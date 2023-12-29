@@ -3,10 +3,9 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import CameraPreview from './CameraPreview';
-import { CameraScreens, MainScreens, RootScreens } from '..';
+import { CameraScreens, MainScreens } from '..';
 import { useAppDispatch } from '@/Hooks';
 import { setImage } from '@/Store/reducers/camera';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 type CameraScreenNavigatorProps = {
   navigation: {

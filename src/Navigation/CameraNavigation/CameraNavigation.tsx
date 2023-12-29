@@ -6,10 +6,16 @@ import CameraScreen from '@/Screens/Camera/Camera';
 import ScannerScreen from '@/Screens/Scanner/Scanner';
 import CustomHeaderBackButton from '@/Components/HeaderBackButton/HeaderBackButton';
 import { Colors } from '@/Theme/Variables';
+import Recommend from '@/Screens/Recommend/Recommend';
+import IngredientDetail from '@/Screens/IngredientDetail/IngredientDetail';
+import RecipeDetail from '@/Screens/RecipeDetail/RecipeDetail';
 
 export type CameraStackParamList = {
   [CameraScreens.SCANNER]: undefined;
   [CameraScreens.SCANNER_RESULT]: undefined;
+  [CameraScreens.RECOMMENDATION]: undefined;
+  [CameraScreens.INGREDIENT_DETAIL]: undefined;
+  [CameraScreens.RECIPE_DETAIL]: undefined;
 };
 
 const CameraStack = createNativeStackNavigator<CameraStackParamList>();
@@ -37,7 +43,22 @@ export const CameraStackScreen = () => {
       <CameraStack.Screen
         name={CameraScreens.SCANNER_RESULT}
         component={ScannerScreen}
-        options={{ title: 'Scanner Result' }}
+        options={{ title: CameraScreens.SCANNER_RESULT }}
+      />
+      <CameraStack.Screen
+        name={CameraScreens.RECOMMENDATION}
+        component={Recommend}
+        options={{ title: CameraScreens.RECOMMENDATION }}
+      />
+      <CameraStack.Screen
+        name={CameraScreens.INGREDIENT_DETAIL}
+        component={IngredientDetail}
+        options={{ title: CameraScreens.INGREDIENT_DETAIL }}
+      />
+      <CameraStack.Screen
+        name={CameraScreens.RECIPE_DETAIL}
+        component={RecipeDetail}
+        options={{ title: CameraScreens.RECIPE_DETAIL }}
       />
     </CameraStack.Navigator>
   );
