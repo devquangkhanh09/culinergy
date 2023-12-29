@@ -1,8 +1,11 @@
-# React Native Expo Redux Template
+# Wecome To Culinergy
 
-[![Build Expo OTA](https://github.com/hpccbk/react-native-expo-redux-template/actions/workflows/update.yml/badge.svg)](https://github.com/hpccbk/react-native-expo-redux-template/actions/workflows/update.yml)
+Are you a cooking enthusiast looking to elevate your culinary adventures? Say hello to Culinergy, your personalized cooking companion! Culinergy is a cutting-edge mobile app that brings a new dimension to your kitchen experience.
 
-This is a template for building React Native apps with the Expo framework and Redux for state management. It includes a basic file structure and configuration for setting up a Redux store, along with some example actions and reducers.
+## Showcase
+
+Link behance: https://www.behance.net/gallery/185730311/Culinergy
+
 
 ## Getting Started
 
