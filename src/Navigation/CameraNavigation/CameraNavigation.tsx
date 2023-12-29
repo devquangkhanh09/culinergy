@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { CameraScreens } from '@/Screens';
 import CameraScreen from '@/Screens/Camera/Camera';
-import ScannerScreen from '@/Screens/Scanner/Scanner';
+import ScannerScreen from '@/Screens/ScannerResult/ScannerResult';
 import CustomHeaderBackButton from '@/Components/HeaderBackButton/HeaderBackButton';
 import { Colors } from '@/Theme/Variables';
 import Recommend from '@/Screens/Recommend/Recommend';
 import IngredientDetail from '@/Screens/IngredientDetail/IngredientDetail';
 import RecipeDetail from '@/Screens/RecipeDetail/RecipeDetail';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 
 export type CameraStackParamList = {
   [CameraScreens.SCANNER]: undefined;
@@ -21,6 +22,23 @@ export type CameraStackParamList = {
 const CameraStack = createNativeStackNavigator<CameraStackParamList>();
 
 export const CameraStackScreen = () => {
+  const navigation = useNavigation();
+
+  // Fix reset camera when clicking back to home button
+  useEffect(() => {
+    const unsubscribeFocus = navigation.addListener('focus', () => {
+      navigation.dispatch(
+        CommonActions.navigate({
+          name: CameraScreens.SCANNER,
+          params: {},
+          key: `${CameraScreens.SCANNER}-${Date.now()}`,
+        })
+      );
+    });
+
+    return unsubscribeFocus;
+  }, [navigation]);
+
   return (
     <CameraStack.Navigator
       screenOptions={{
