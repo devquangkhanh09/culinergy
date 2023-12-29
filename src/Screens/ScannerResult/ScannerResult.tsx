@@ -32,17 +32,17 @@ export default function ScannerScreen() {
     },
     {
       id: 4,
-      name: 'Ingredient 4',
+      name: 'Cheenen',
       image: 'https://picsum.photos/200/300',
     },
     {
       id: 5,
-      name: 'Ingredient 5',
+      name: 'Mustard',
       image: 'https://picsum.photos/200/300',
     },
     {
       id: 6,
-      name: 'Ingredient 6',
+      name: 'Mayonaise',
       image: 'https://picsum.photos/200/300',
     },
   ];
