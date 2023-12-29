@@ -1,35 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
-import { useAppDispatch } from "@/Hooks";
+import { useAppDispatch } from '@/Hooks';
 import { setToken, unsetFirstTime } from '@/Store/reducers';
-import { MainScreens, RootScreens } from '..';
+import { AuthScreens, MainScreens, RootScreens } from '..';
 
 // NOTE: The following code does not work (cannot navigate to RootScreens.LOGIN), but it is the correct way to type the navigation prop
 // type SettingsScreenNavigatorProps = BottomTabScreenProps<
-//   MainNavigatorProps, 
+//   MainNavigatorProps,
 //   MainScreens.SETTINGS
 // >;
 type SettingsScreenNavigatorProps = {
   navigation: {
-    navigate: (screen: RootScreens | MainScreens) => void;
+    navigate: (screen: AuthScreens | RootScreens) => void;
   };
-}
+};
 
-export const Settings = ({
-  navigation,
-}: SettingsScreenNavigatorProps) => {
+export const Settings = ({ navigation }: SettingsScreenNavigatorProps) => {
   const dispatch = useAppDispatch();
 
   const handleLogOut = () => {
     // TODO: perform logout logic here
     dispatch(setToken(''));
-    navigation.navigate(RootScreens.LOGIN);
+    navigation.navigate(AuthScreens.LOGIN);
   };
 
   const handleReset = () => {
     dispatch(unsetFirstTime());
     dispatch(setToken(''));
-    navigation.navigate(RootScreens.WELCOME);
+    navigation.navigate(AuthScreens.WELCOME);
   };
 
   // TODO: remove button to reset
@@ -47,5 +45,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
-  }
+  },
 });

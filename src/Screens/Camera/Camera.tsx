@@ -3,14 +3,14 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import CameraPreview from './CameraPreview';
-import { MainScreens, RootScreens } from '..';
+import { CameraScreens, MainScreens, RootScreens } from '..';
 import { useAppDispatch } from '@/Hooks';
 import { setImage } from '@/Store/reducers/camera';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 type CameraScreenNavigatorProps = {
   navigation: {
-    navigate: (screen: RootScreens | MainScreens) => void;
+    navigate: (screen: CameraScreens | MainScreens) => void;
   };
 };
 
@@ -42,7 +42,7 @@ export default function CameraScreen({
     setCapturedImage(photo);
   };
   const __savePhoto = () => {
-    navigation.navigate(RootScreens.INGREDIENTS);
+    navigation.navigate(CameraScreens.SCANNER_RESULT);
     dispatch(setImage(capturedImage));
   };
   const __retakePicture = () => {
@@ -55,13 +55,6 @@ export default function CameraScreen({
     navigation.navigate(MainScreens.HOME);
   };
 
-  const __switchCamera = () => {
-    if (cameraType === 'back') {
-      setCameraType('front');
-    } else {
-      setCameraType('back');
-    }
-  };
   return (
     <View style={styles.container}>
       <View
