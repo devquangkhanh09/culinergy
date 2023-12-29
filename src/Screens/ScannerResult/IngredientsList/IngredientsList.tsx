@@ -35,7 +35,7 @@ const IngredientsList = ({ dataSource }: IngredientsProps) => {
       ]}>
       <Image source={{ uri: item.image }} style={styles.image} />
       <Text style={styles.name}>{item.name}</Text>
-      <Icon name="chevron-right" size={20} color="gray" />
+      <Icon name="chevron-right" size={20} color="gray" style={styles.icon} />
     </Pressable>
   );
 
@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
-    padding: 10,
     margin: 10,
     borderRadius: 20,
     shadowColor: '#000',
@@ -75,9 +74,12 @@ const styles = StyleSheet.create({
     borderColor: '#D1D1D1',
   },
   image: {
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
     marginRight: 10,
+    borderRadius: 10,
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
   },
   name: {
     fontSize: 16,
@@ -85,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   icon: {
-    fontSize: 20,
+    marginRight: 10,
   },
 });
 

@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Image, StyleSheet, Dimensions, Text } from 'react-native';
 import { useAppSelector } from '@/Hooks';
-import IngredientsList from '@/Components/IngredientsList/IngredientsList';
+
 import CustomButton from '@/Components/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import { CameraScreens } from '..';
+import IngredientsList from './IngredientsList/IngredientsList';
 
 export default function ScannerScreen() {
   const camera = useAppSelector((state) => state.camera);
@@ -16,17 +17,17 @@ export default function ScannerScreen() {
   const ingredients = [
     {
       id: 1,
-      name: 'Ingredient 1',
+      name: 'Chicken',
       image: 'https://picsum.photos/200/300',
     },
     {
       id: 2,
-      name: 'Ingredient 2',
+      name: 'Onion',
       image: 'https://picsum.photos/200/300',
     },
     {
       id: 3,
-      name: 'Ingredient 3',
+      name: 'Grape',
       image: 'https://picsum.photos/200/300',
     },
     {
