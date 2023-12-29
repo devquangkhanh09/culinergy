@@ -24,6 +24,8 @@ type LoginScreenNavigatorProps = NativeStackScreenProps<
 
 export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
   const user = useAppSelector((state) => state.user);
+  const isFirstTime = useAppSelector((state) => state.firstTime.isFirstTime);
+
   useEffect(() => {
     if (user.token || user.isGuest) {
       navigation.navigate(RootScreens.MAIN);
@@ -32,7 +34,9 @@ export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
 
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(setFirstTime());
+    if (isFirstTime) {
+      navigation.navigate(AuthScreens.WELCOME);
+    }
   }, []);
 
   const [email, setEmail] = useState('');

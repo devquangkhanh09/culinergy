@@ -14,9 +14,7 @@ import {
 import { FooterProps } from 'react-native-onboard/lib/OnboardFlow/Footer';
 
 interface Props extends FooterProps {
-  navigation: {
-    navigate: (screen: AuthScreens) => void;
-  };
+  onDone: () => void;
 }
 
 export const OnboardingFooter: FC<Props> = ({
@@ -68,7 +66,7 @@ export const OnboardingFooter: FC<Props> = ({
       <TouchableOpacity
         activeOpacity={0.8}
         style={{ position: 'absolute', bottom: 0, right: 15 }}
-        onPress={() => props.navigation.navigate(AuthScreens.LOGIN)}>
+        onPress={props.onDone}>
         <Text style={{ color: '#57B97D' }}>Skip</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
