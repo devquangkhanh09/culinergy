@@ -26,26 +26,6 @@ export type CameraStackParamList = {
 const CameraStack = createNativeStackNavigator<CameraStackParamList>();
 
 export const CameraStackScreen = () => {
-  const navigation = useNavigation();
-  const isFocused = useIsFocused();
-
-  // Fix reset camera when clicking back to home button
-  useEffect(() => {
-    const unsubscribeFocus = navigation.addListener('focus', () => {
-      if (isFocused) {
-        navigation.dispatch(
-          CommonActions.navigate({
-            name: CameraScreens.SCANNER,
-            params: {},
-            key: `${CameraScreens.SCANNER}-${Date.now()}`,
-          })
-        );
-      }
-    });
-
-    return unsubscribeFocus;
-  }, [navigation, isFocused]);
-
   return (
     <CameraStack.Navigator
       screenOptions={{
