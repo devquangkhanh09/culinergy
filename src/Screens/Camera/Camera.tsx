@@ -1,11 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+  Image,
+} from 'react-native';
 import { Camera } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker'; // Import ImagePicker
 import CameraPreview from './CameraPreview';
 import { CameraScreens, MainScreens } from '..';
 import { useAppDispatch } from '@/Hooks';
 import { setImage } from '@/Store/reducers/camera';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import EIcon from 'react-native-vector-icons/Entypo';
 
 type CameraScreenNavigatorProps = {
   navigation: {
@@ -17,51 +27,74 @@ export default function CameraScreen({
   navigation,
 }: CameraScreenNavigatorProps) {
   var camera: Camera;
-  const [startCamera, setStartCamera] = React.useState(false);
+  const [isStartCamera, setIsStartCamera] = React.useState(false);
   const [previewVisible, setPreviewVisible] = React.useState(false);
   const [capturedImage, setCapturedImage] = React.useState<any>(null);
   const [cameraType, setCameraType] = React.useState<any>('back');
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    __startCamera();
+    startCamera();
   }, []);
 
-  const __startCamera = async () => {
+  const startCamera = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync();
     if (status === 'granted') {
-      setStartCamera(true);
+      setIsStartCamera(true);
     } else {
       Alert.alert('Access denied');
     }
   };
-  const __takePicture = async () => {
-    const photo: any = await camera.takePictureAsync();
-    setPreviewVisible(true);
-    setCapturedImage(photo);
+
+  const takePicture = async () => {
+    if (camera) {
+      const photo: any = await camera.takePictureAsync();
+      setPreviewVisible(true);
+      setCapturedImage(photo);
+    }
   };
-  const __savePhoto = () => {
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setPreviewVisible(true);
+      setCapturedImage(result.assets[0]);
+    }
+  };
+
+  const savePhoto = () => {
     navigation.navigate(CameraScreens.SCANNER_RESULT);
     dispatch(setImage(capturedImage));
   };
-  const __retakePicture = () => {
+
+  const retakePicture = () => {
     setCapturedImage(null);
     setPreviewVisible(false);
-    __startCamera();
+    startCamera();
+  };
+
+  const switchCamera = () => {
+    if (cameraType === 'back') {
+      setCameraType('front');
+    } else {
+      setCameraType('back');
+    }
   };
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          flex: 1,
-          width: '100%',
-        }}>
+      <View style={{ flex: 1, width: '100%' }}>
         {previewVisible && capturedImage ? (
           <CameraPreview
             photo={capturedImage}
-            savePhoto={__savePhoto}
-            retakePicture={__retakePicture}
+            savePhoto={savePhoto}
+            retakePicture={retakePicture}
           />
         ) : (
           <Camera
@@ -95,15 +128,56 @@ export default function CameraScreen({
                     alignItems: 'center',
                   }}>
                   <TouchableOpacity
-                    onPress={__takePicture}
+                    onPress={pickImage}
+                    style={{
+                      width: 70,
+                      height: 70,
+                      bottom: 10,
+                      borderRadius: 20,
+                      backgroundColor: 'transparent',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Icon name="file-image" size={30} color="#fff" />
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    alignSelf: 'center',
+                    flex: 1,
+                    alignItems: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={takePicture}
                     style={{
                       width: 70,
                       height: 70,
                       bottom: 10,
                       borderRadius: 50,
                       backgroundColor: '#fff',
-                    }}
-                  />
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}></TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    alignSelf: 'center',
+                    flex: 1,
+                    alignItems: 'center',
+                  }}>
+                  <TouchableOpacity
+                    onPress={switchCamera}
+                    style={{
+                      width: 70,
+                      height: 70,
+                      bottom: 10,
+                      borderRadius: 50,
+                      backgroundColor: 'transparent',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <EIcon name="cycle" size={30} color="#fff" />
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
