@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 
-export default function Algergenic() {
+export default function Allergenic() {
   return (
     <View style={styles.container}>
-      <Text>Algergenic</Text>
+      <Text>Allergenic</Text>
     </View>
   );
 }

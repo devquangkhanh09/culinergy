@@ -5,8 +5,8 @@ import { SettingScreens } from '@/Screens';
 import CustomHeaderBackButton from '@/Components/HeaderBackButton/HeaderBackButton';
 import { Colors } from '@/Theme/Variables';
 import { Settings } from '@/Screens/Settings';
-import Algergenic from '@/Screens/Allergenic/Algergenic';
 import ChangePassword from '@/Screens/ChangePassword/ChangePassword';
+import Allergenic from '@/Screens/Allergenic/Allergenic';
 
 export type SettingStackParamList = {
   [SettingScreens.INFO]: undefined;
@@ -40,7 +40,7 @@ export const SettingStackScreen = () => {
       />
       <SettingStack.Screen
         name={SettingScreens.ALLERGENIC_INGREDIENS}
-        component={Algergenic}
+        component={Allergenic}
         options={{
           title: SettingScreens.ALLERGENIC_INGREDIENS,
         }}
