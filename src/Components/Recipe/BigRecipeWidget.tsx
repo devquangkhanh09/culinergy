@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useToggleFavoriteRecipeMutation } from "@/Services/recipes";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { CameraScreens, MainScreens } from "@/Screens";
+import { MainScreens, RootScreens } from "@/Screens";
 import { useAppDispatch } from "@/Hooks";
 import { updateFavorites } from "@/Store/reducers/favorites";
 
@@ -36,8 +36,8 @@ export const BigRecipeWidget = ({ data }: { data: Recipe }) => {
   };
 
   const navigateToRecipeDetail = () => {
-    navigation.navigate(MainScreens.CAMERA, {
-      screen: CameraScreens.RECIPE_DETAIL,
+    navigation.navigate(RootScreens.MAIN, {
+      screen: MainScreens.RECIPE_DETAIL,
       params: { recipeId: recipeData._id },
     });
   };
