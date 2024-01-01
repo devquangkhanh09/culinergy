@@ -16,7 +16,8 @@ import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { CameraScreens } from '..';
 import { Recipe, useLazyGetRecipeQuery } from '@/Services/recipes';
 import { useToggleFavoriteRecipeMutation } from '@/Services/recipes';
-import { RouteProp } from '@react-navigation/native';
+import { useAppDispatch } from '@/Hooks';
+import { updateFavorites } from '@/Store/reducers/favorites';
 
 type RecipeDetailScreenNavigationProp = NativeStackScreenProps<
   CameraStackParamList,
@@ -29,6 +30,7 @@ export default function RecipeDetail ({ route }: RecipeDetailScreenNavigationPro
   const [fetchOne, { data, isLoading }] = useLazyGetRecipeQuery();
   const [recipeData, setRecipeData] = useState(data);
   const [toggleFavoriteRecipe] = useToggleFavoriteRecipeMutation();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     fetchOne(recipeId);
@@ -53,6 +55,7 @@ export default function RecipeDetail ({ route }: RecipeDetailScreenNavigationPro
         isFavorite: responseData.isFavorite,
         favoriteCount: responseData.favoriteCount,
       });
+      dispatch(updateFavorites());
     } else if ('error' in response) {
       console.log(response.error);
     }

@@ -20,6 +20,7 @@ import {
 } from './reducers';
 import { cameraReducers } from './reducers/camera';
 import { exploreReducers } from './reducers/explore';
+import { favoritesReducers } from './reducers/favorites';
 
 const reducers = combineReducers({
   api: API.reducer,
@@ -29,6 +30,7 @@ const reducers = combineReducers({
   user: userReducers,
   camera: cameraReducers,
   explore: exploreReducers,
+  favorites: favoritesReducers,
 });
 
 const persistConfig = {

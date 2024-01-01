@@ -3,6 +3,7 @@ import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
 import { MainScreens, RootScreens } from '..';
 import { BigRecipeWidget } from '@/Components/Recipe/BigRecipeWidget';
 import { useLazyGetFavoriteRecipesQuery } from '@/Services/recipes';
+import { useAppSelector } from '@/Hooks';
 
 type FavoritesScreenNavigatorProps = {
   navigation: {
@@ -15,10 +16,11 @@ export const Favorites = ({
 }: FavoritesScreenNavigatorProps) => {
   // TODO: show loading indicator
   const [fetch, { data, isLoading }] = useLazyGetFavoriteRecipesQuery();
+  const favoritesUpdatedIndex = useAppSelector((state) => state.favorites.favoritesUpdatedIndex);
 
   useEffect(() => {
     fetch();
-  }, []);
+  }, [favoritesUpdatedIndex]);
 
   return (
     (data && data.length > 0 &&

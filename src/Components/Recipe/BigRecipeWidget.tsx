@@ -6,6 +6,8 @@ import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useToggleFavoriteRecipeMutation } from "@/Services/recipes";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { CameraScreens, MainScreens } from "@/Screens";
+import { useAppDispatch } from "@/Hooks";
+import { updateFavorites } from "@/Store/reducers/favorites";
 
 var maxWidth = Dimensions.get('window').width;
 
@@ -13,6 +15,7 @@ export const BigRecipeWidget = ({ data }: { data: Recipe }) => {
   const [recipeData, setRecipeData] = useState(data);
   const [toggleFavoriteRecipe] = useToggleFavoriteRecipeMutation();
   const navigation = useNavigation<any>();
+  const dispatch = useAppDispatch();
 
   const handleToggleFavorite = async () => {
     if (recipeData.isFavorite === undefined) return;
@@ -22,6 +25,7 @@ export const BigRecipeWidget = ({ data }: { data: Recipe }) => {
     if ('data' in response) {
       const responseData = response.data;
       setRecipeData(responseData);
+      dispatch(updateFavorites());
     } else if ('error' in response) {
       console.log(response.error);
     }

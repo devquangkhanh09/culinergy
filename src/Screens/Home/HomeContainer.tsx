@@ -4,6 +4,7 @@ import { useLazyGetProfileQuery } from '@/Services';
 import { useLazyGetRecommendedRecipesQuery } from '@/Services/recipes';
 import { ScrollView } from 'react-native';
 import { MainScreens } from '..';
+import { useAppSelector } from '@/Hooks';
 
 type HomeScreenNavigatorProps = {
   navigation: {
@@ -12,15 +13,23 @@ type HomeScreenNavigatorProps = {
 }
 
 export const HomeContainer = ({ navigation }: HomeScreenNavigatorProps) => {
-  const [fetchOne, { data: profileData, isLoading: isLoading }] = useLazyGetProfileQuery();
-  const [fetchTwo, { data: recipesData, isLoading: isLoading2 }] = useLazyGetRecommendedRecipesQuery();
+  const [fetchProfile, { data: profileData, isLoading: isLoading }] = useLazyGetProfileQuery();
+  const [fetchRecommended, { data: recipesData, isLoading: isLoading2 }] = useLazyGetRecommendedRecipesQuery();
+  const favoritesUpdatedIndex = useAppSelector((state) => state.favorites.favoritesUpdatedIndex);
 
   useEffect(() => {
-    fetchOne();
-    fetchTwo({
+    fetchProfile();
+    fetchRecommended({
       ofTheDay: true,
     });
   }, []);
+
+  // TODO: fix recipe not updating when favoriting (big recipe widget)
+  useEffect(() => {
+    fetchRecommended({
+      ofTheDay: true,
+    });
+  }, [favoritesUpdatedIndex]);
 
   return (
     <ScrollView>
