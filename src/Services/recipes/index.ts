@@ -31,10 +31,9 @@ const recipeApi = API.injectEndpoints({
   endpoints: (build) => ({
     getRecommendedRecipes: build.query<Recipe[], RecommendedQuery>({
       query: (query) => ({
-        // TODO: fix query not working (have to change the url manually)
-        url: "recipes/recommended?ofTheDay=true",
+        url: "recipes/recommended",
         method: "GET",
-        query,
+        params: query,
       }),
     }),
 

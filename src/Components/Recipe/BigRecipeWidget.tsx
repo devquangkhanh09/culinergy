@@ -1,5 +1,5 @@
 import { Recipe } from "@/Services/recipes";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dimensions, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -16,6 +16,10 @@ export const BigRecipeWidget = ({ data }: { data: Recipe }) => {
   const [toggleFavoriteRecipe] = useToggleFavoriteRecipeMutation();
   const navigation = useNavigation<any>();
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setRecipeData(data);
+  }, [data]);
 
   const handleToggleFavorite = async () => {
     if (recipeData.isFavorite === undefined) return;

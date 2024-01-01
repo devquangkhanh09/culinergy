@@ -24,7 +24,6 @@ export const HomeContainer = ({ navigation }: HomeScreenNavigatorProps) => {
     });
   }, []);
 
-  // TODO: fix recipe not updating when favoriting (big recipe widget)
   useEffect(() => {
     fetchRecommended({
       ofTheDay: true,
