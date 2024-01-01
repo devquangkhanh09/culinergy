@@ -35,11 +35,15 @@ export const BigRecipeWidget = ({ data }: { data: Recipe }) => {
     }
   };
 
-  return (
-    <Pressable onPress={() => navigation.navigate(MainScreens.CAMERA, {
+  const navigateToRecipeDetail = () => {
+    navigation.navigate(MainScreens.CAMERA, {
       screen: CameraScreens.RECIPE_DETAIL,
-      params: { recipeId: recipeData._id }
-    })}>
+      params: { recipeId: recipeData._id },
+    });
+  };
+
+  return (
+    <Pressable onPress={navigateToRecipeDetail}>
       <View style={styles.container}>
         <Image source={{ uri: recipeData.imageUrl }} style={{ width: '100%', height: maxWidth * 0.4, borderRadius: 15 }} />
         <View

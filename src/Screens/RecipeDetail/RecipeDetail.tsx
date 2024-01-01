@@ -34,7 +34,7 @@ export default function RecipeDetail ({ route }: RecipeDetailScreenNavigationPro
 
   useEffect(() => {
     fetchOne(recipeId);
-  }, []);
+  }, [route.params.recipeId]);
 
   useEffect(() => {
     if (data) {
