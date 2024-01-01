@@ -18,9 +18,9 @@ export enum CameraScreens {
 }
 
 export enum SettingScreens {
-  INFO = 'INFO',
-  ALLERGENIC_INGREDIENS = 'ALLERGENIC_INGREDIENS',
-  CHANGE_PASSWORD = 'CHANGE_PASSWORD',
+  INFO = 'Settings',
+  ALLERGENIC_INGREDIENS = 'Allergenic Ingredients',
+  CHANGE_PASSWORD = 'Change Password',
 }
 
 export enum MainScreens {

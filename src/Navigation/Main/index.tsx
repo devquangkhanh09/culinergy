@@ -127,6 +127,7 @@ export const MainNavigator = () => {
             />
           ),
           tabBarLabelPosition: 'below-icon',
+          headerShown: false,
         }}
       />
     </Tab.Navigator>

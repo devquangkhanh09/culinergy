@@ -34,12 +34,16 @@ export const SettingStackScreen = () => {
       <SettingStack.Screen
         name={SettingScreens.INFO}
         component={Settings}
-        options={{ title: SettingScreens.INFO }}
+        options={() => ({
+          headerLeft: () => null,
+        })}
       />
       <SettingStack.Screen
         name={SettingScreens.ALLERGENIC_INGREDIENS}
         component={Algergenic}
-        options={{ title: SettingScreens.ALLERGENIC_INGREDIENS }}
+        options={{
+          title: SettingScreens.ALLERGENIC_INGREDIENS,
+        }}
       />
       <SettingStack.Screen
         name={SettingScreens.CHANGE_PASSWORD}
