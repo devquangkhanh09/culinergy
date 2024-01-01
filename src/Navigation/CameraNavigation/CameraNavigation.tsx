@@ -9,11 +9,6 @@ import { Colors } from '@/Theme/Variables';
 import Recommend from '@/Screens/Recommend/Recommend';
 import IngredientDetail from '@/Screens/IngredientDetail/IngredientDetail';
 import RecipeDetail from '@/Screens/RecipeDetail/RecipeDetail';
-import {
-  useNavigation,
-  CommonActions,
-  useIsFocused,
-} from '@react-navigation/native';
 
 export type CameraStackParamList = {
   [CameraScreens.SCANNER]: undefined;

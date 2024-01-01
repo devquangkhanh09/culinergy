@@ -17,6 +17,12 @@ export enum CameraScreens {
   RECIPE_DETAIL = 'Recipe Detail',
 }
 
+export enum SettingScreens {
+  INFO = 'INFO',
+  ALLERGENIC_INGREDIENS = 'ALLERGENIC_INGREDIENS',
+  CHANGE_PASSWORD = 'CHANGE_PASSWORD',
+}
+
 export enum MainScreens {
   HOME = 'Home',
   SETTINGS = 'Settings',
