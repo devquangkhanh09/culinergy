@@ -1,6 +1,6 @@
 import { RootStackParamList } from '@/Navigation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   TextInput,
@@ -16,6 +16,7 @@ import { AuthScreens, RootScreens } from '..';
 import { useAppDispatch } from '@/Hooks';
 import { setGuest, setToken } from '@/Store/reducers';
 import { AuthStackParamList } from '@/Navigation/AuthNavigation/AuthNavigation';
+import { useRegisterMutation } from '@/Services/auth';
 
 type RegisterScreenNavigatorProps = NativeStackScreenProps<
   AuthStackParamList,
@@ -28,13 +29,21 @@ export const Register = ({ navigation }: RegisterScreenNavigatorProps) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  // TODO: show error message and loading indicator
+  const [register, { data, error, isLoading }] = useRegisterMutation();
+
   const dispatch = useAppDispatch();
 
   const handleRegister = () => {
-    // TODO: perform register logic here
-    dispatch(setToken('token'));
-    navigation.navigate(RootScreens.MAIN);
+    register({ name, email, password });
   };
+
+  useEffect(() => {
+    if (data) {
+      dispatch(setToken(data.accessToken));
+      navigation.navigate(RootScreens.MAIN);
+    }
+  }, [data]);
 
   const handleContinueAsGuest = () => {
     dispatch(setGuest());

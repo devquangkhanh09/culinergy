@@ -1,21 +1,33 @@
 import { Home } from './Home';
-import React, { useState, useEffect } from 'react';
-import { useLazyGetUserQuery } from '@/Services';
+import React, { useEffect } from 'react';
+import { useLazyGetProfileQuery } from '@/Services';
+import { useLazyGetRecommendedRecipesQuery } from '@/Services/recipes';
 import { ScrollView } from 'react-native';
+import { MainScreens } from '..';
 
-export const HomeContainer = () => {
-  const [userId, setUserId] = useState('9');
+type HomeScreenNavigatorProps = {
+  navigation: {
+    navigate: (screen: MainScreens) => void;
+  };
+}
 
-  const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] =
-    useLazyGetUserQuery();
+export const HomeContainer = ({ navigation }: HomeScreenNavigatorProps) => {
+  const [fetchOne, { data: profileData, isLoading: isLoading }] = useLazyGetProfileQuery();
+  const [fetchTwo, { data: recipesData, isLoading: isLoading2 }] = useLazyGetRecommendedRecipesQuery();
 
   useEffect(() => {
-    fetchOne(userId);
-  }, [fetchOne, userId]);
+    fetchOne();
+    fetchTwo({
+      ofTheDay: true,
+    });
+  }, []);
 
   return (
     <ScrollView>
-      <Home data={data} isLoading={isLoading} />
+      <Home data={{
+        profile: profileData,
+        recipes: recipesData,
+      }} isLoading={isLoading && isLoading2} />
     </ScrollView>
   );
 };

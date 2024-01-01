@@ -1,5 +1,7 @@
 import Badge from '@/Components/Badge/Badge';
-import React, { useState } from 'react';
+import { CameraStackParamList } from '@/Navigation/CameraNavigation/CameraNavigation';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,58 +13,77 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { CameraScreens } from '..';
+import { Recipe, useLazyGetRecipeQuery } from '@/Services/recipes';
+import { useToggleFavoriteRecipeMutation } from '@/Services/recipes';
+import { RouteProp } from '@react-navigation/native';
 
-export default function RecipeDetail() {
-  const imageUrl = 'https://picsum.photos/200/300';
-  const [isHeartClicked, setHeartClicked] = useState(false);
+type RecipeDetailScreenNavigationProp = NativeStackScreenProps<
+  CameraStackParamList,
+  CameraScreens.RECIPE_DETAIL
+>;
 
-  const handleHeartClick = () => {
-    setHeartClicked(!isHeartClicked);
+export default function RecipeDetail ({ route }: RecipeDetailScreenNavigationProp) {
+  const { recipeId } = route.params;
+  // TODO: show loading indicator
+  const [fetchOne, { data, isLoading }] = useLazyGetRecipeQuery();
+  const [recipeData, setRecipeData] = useState(data);
+  const [toggleFavoriteRecipe] = useToggleFavoriteRecipeMutation();
+
+  useEffect(() => {
+    fetchOne(recipeId);
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      setRecipeData(data);
+    }
+  }, [data]);
+
+  const handleToggleFavorite = async () => {
+    if (!recipeData || recipeData.isFavorite === undefined) return;
+
+    const response = await toggleFavoriteRecipe(recipeData._id);
+
+    if ('data' in response) {
+      const responseData = response.data;
+      // the responseData does not populate the ingredients, so we need to partially update the recipeData
+      setRecipeData({
+        ...recipeData,
+        isFavorite: responseData.isFavorite,
+        favoriteCount: responseData.favoriteCount,
+      });
+    } else if ('error' in response) {
+      console.log(response.error);
+    }
   };
-  const badge = [
-    { id: 1, name: 'Spicy' },
-    { id: 2, name: 'Low Fat' },
-    { id: 3, name: 'High Crab' },
-  ];
-  const ingredients = [
-    { id: 1, name: 'Chicken' },
-    { id: 2, name: 'Grape' },
-    { id: 3, name: 'Eggs' },
-    { id: 4, name: 'Apple' },
-  ];
-
-  const instructions = [
-    { id: 1, name: 'Step 1. Boil the water' },
-    { id: 2, name: 'Step 2. Add pasta and cook for 10 minutes' },
-    { id: 3, name: 'Step 3. Chop the vegetables' },
-    { id: 4, name: 'Step 4. Mix pasta and vegetables together' },
-  ];
 
   return (
+    (recipeData &&
     <ScrollView style={styles.container}>
       <View style={styles.imageContainer}>
         <Image
-          source={{ uri: imageUrl }}
+          source={{ uri: recipeData.imageUrl }}
           style={styles.image}
           resizeMode="cover"
         />
         <TouchableOpacity
           style={styles.heartIconContainer}
-          onPress={handleHeartClick}>
+          onPress={handleToggleFavorite}>
           <Icon
-            name={isHeartClicked ? 'heart' : 'heart-o'}
+            name={recipeData.isFavorite ? 'heart' : 'heart-o'}
             size={40}
-            color={isHeartClicked ? 'red' : '#000'}
+            color={recipeData.isFavorite ? 'red' : '#000'}
             style={styles.icon}
           />
         </TouchableOpacity>
       </View>
       <View style={styles.recipeInfo}>
-        <Text style={styles.recipeHeader}>Chicken soup Allan Pasta</Text>
+        <Text style={styles.recipeHeader}>{recipeData.name}</Text>
         <View style={styles.content}>
           <View style={styles.flexBetween}>
             <Icon name="clock-o" size={30} color="#000" style={styles.icon} />
-            <Text style={styles.text}>15 mins</Text>
+            <Text style={styles.text}>{recipeData.timeToCook}</Text>
           </View>
           <View style={styles.flexBetween}>
             <MCIcon
@@ -71,15 +92,15 @@ export default function RecipeDetail() {
               color="#000000"
               style={styles.icon}
             />
-            <Text style={styles.text}>69 cooked</Text>
+            <Text style={styles.text}>{recipeData.favoriteCount} cooked</Text>
           </View>
         </View>
         <View style={styles.contentList}>
           <Text style={styles.textSubHeader}>Tags</Text>
           <View style={styles.badgeList}>
-            {badge.map((item) => (
-              <View key={item.id} style={styles.badgeItem}>
-                <Badge id={item.id} name={item.name} />
+            {recipeData.tags.map((tag, idx) => (
+              <View key={idx} style={styles.badgeItem}>
+                <Badge id={idx} name={tag} />
               </View>
             ))}
           </View>
@@ -87,9 +108,9 @@ export default function RecipeDetail() {
         <View style={styles.contentList}>
           <Text style={styles.textSubHeader}>Ingredients</Text>
           <View>
-            {ingredients.map((item) => (
-              <View key={item.id}>
-                <Text style={styles.textItem}>{item.name}</Text>
+            {recipeData.ingredients.map((ingredient) => (
+              <View key={ingredient._id}>
+                <Text style={styles.textItem}>{ingredient.name}</Text>
               </View>
             ))}
           </View>
@@ -97,15 +118,16 @@ export default function RecipeDetail() {
         <View style={styles.contentList}>
           <Text style={styles.textSubHeader}>Instructions</Text>
           <View>
-            {instructions.map((item) => (
-              <View key={item.id}>
-                <Text style={styles.textItem}>{item.name}</Text>
+            {recipeData.instructions.map((instruction, idx) => (
+              <View key={idx}>
+                <Text style={styles.textItem}>{instruction}</Text>
               </View>
             ))}
           </View>
         </View>
       </View>
     </ScrollView>
+    )
   );
 }
 
@@ -188,3 +210,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
 });
+function toggleFavoriteRecipe(_id: number) {
+  throw new Error('Function not implemented.');
+}
+

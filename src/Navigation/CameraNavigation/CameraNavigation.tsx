@@ -9,18 +9,15 @@ import { Colors } from '@/Theme/Variables';
 import Recommend from '@/Screens/Recommend/Recommend';
 import IngredientDetail from '@/Screens/IngredientDetail/IngredientDetail';
 import RecipeDetail from '@/Screens/RecipeDetail/RecipeDetail';
-import {
-  useNavigation,
-  CommonActions,
-  useIsFocused,
-} from '@react-navigation/native';
 
 export type CameraStackParamList = {
   [CameraScreens.SCANNER]: undefined;
   [CameraScreens.SCANNER_RESULT]: undefined;
   [CameraScreens.RECOMMENDATION]: undefined;
   [CameraScreens.INGREDIENT_DETAIL]: undefined;
-  [CameraScreens.RECIPE_DETAIL]: undefined;
+  [CameraScreens.RECIPE_DETAIL]: {
+    recipeId: number;
+  };
 };
 
 const CameraStack = createNativeStackNavigator<CameraStackParamList>();
@@ -62,7 +59,7 @@ export const CameraStackScreen = () => {
       />
       <CameraStack.Screen
         name={CameraScreens.RECIPE_DETAIL}
-        component={RecipeDetail}
+        getComponent={() => require('@/Screens/RecipeDetail/RecipeDetail').default}
         options={{ title: CameraScreens.RECIPE_DETAIL }}
       />
     </CameraStack.Navigator>
