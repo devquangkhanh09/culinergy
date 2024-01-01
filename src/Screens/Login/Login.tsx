@@ -16,6 +16,7 @@ import { AuthScreens, RootScreens } from '..';
 import { useAppDispatch, useAppSelector } from '@/Hooks';
 import { setFirstTime, setGuest, setToken } from '@/Store/reducers';
 import { AuthStackParamList } from '@/Navigation/AuthNavigation/AuthNavigation';
+import { useLoginMutation } from '@/Services/auth';
 
 type LoginScreenNavigatorProps = NativeStackScreenProps<
   AuthStackParamList,
@@ -25,6 +26,9 @@ type LoginScreenNavigatorProps = NativeStackScreenProps<
 export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
   const user = useAppSelector((state) => state.user);
   const isFirstTime = useAppSelector((state) => state.firstTime.isFirstTime);
+
+  // TODO: show error message and loading indicator
+  const [login, { data, error, isLoading }] = useLoginMutation();
 
   useEffect(() => {
     if (user.token || user.isGuest) {
@@ -43,9 +47,15 @@ export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    dispatch(setToken('token'));
-    navigation.navigate(RootScreens.MAIN);
+    login({ email, password });
   };
+
+  useEffect(() => {
+    if (data) {
+      dispatch(setToken(data.accessToken));
+      navigation.navigate(RootScreens.MAIN);
+    }
+  }, [data]);
 
   const handleContinueAsGuest = () => {
     dispatch(setGuest());

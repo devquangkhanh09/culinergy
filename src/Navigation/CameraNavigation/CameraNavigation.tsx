@@ -15,7 +15,9 @@ export type CameraStackParamList = {
   [CameraScreens.SCANNER_RESULT]: undefined;
   [CameraScreens.RECOMMENDATION]: undefined;
   [CameraScreens.INGREDIENT_DETAIL]: undefined;
-  [CameraScreens.RECIPE_DETAIL]: undefined;
+  [CameraScreens.RECIPE_DETAIL]: {
+    recipeId: number;
+  };
 };
 
 const CameraStack = createNativeStackNavigator<CameraStackParamList>();
@@ -57,7 +59,7 @@ export const CameraStackScreen = () => {
       />
       <CameraStack.Screen
         name={CameraScreens.RECIPE_DETAIL}
-        component={RecipeDetail}
+        getComponent={() => require('@/Screens/RecipeDetail/RecipeDetail').default}
         options={{ title: CameraScreens.RECIPE_DETAIL }}
       />
     </CameraStack.Navigator>

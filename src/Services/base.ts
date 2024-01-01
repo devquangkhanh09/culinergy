@@ -6,7 +6,16 @@ import {
   fetchBaseQuery,
 } from "@reduxjs/toolkit/query/react";
 
-const baseQuery = fetchBaseQuery({ baseUrl: Config.API_URL });
+const baseQuery = fetchBaseQuery({ 
+  baseUrl: Config.API_URL,
+  prepareHeaders: (headers, { getState }) => {
+    const token = (getState() as { user: { token: string }}).user.token;
+    if (token) {
+      headers.set("authorization", `Bearer ${token}`);
+    }
+    return headers;
+  },
+});
 
 const baseQueryWithInterceptor = async (
   args: string | FetchArgs,

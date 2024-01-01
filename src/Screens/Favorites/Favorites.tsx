@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
-import { useAppDispatch } from "@/Hooks";
-import { setToken, unsetFirstTime } from '@/Store/reducers';
 import { MainScreens, RootScreens } from '..';
 import { BigRecipeWidget } from '@/Components/Recipe/BigRecipeWidget';
+import { useLazyGetFavoriteRecipesQuery } from '@/Services/recipes';
+import { useAppSelector } from '@/Hooks';
 
 type FavoritesScreenNavigatorProps = {
   navigation: {
@@ -11,35 +11,35 @@ type FavoritesScreenNavigatorProps = {
   };
 }
 
-const recipe = [
-  {
-    img: require('../../../assets/recipe/recipe-3.png'),
-    name: 'Pasta alla Norma',
-    isLike: true,
-  },
-  {
-    img: require('../../../assets/recipe/recipe-1.png'),
-    name: 'Chicken soup Allan Pasta',
-    isLike: true,
-  },
-  {
-    img: require('../../../assets/recipe/recipe-2.png'),
-    name: 'Tomato Pasta',
-    isLike: true,
-  }
-]
-
 export const Favorites = ({
   navigation,
 }: FavoritesScreenNavigatorProps) => {
+  // TODO: show loading indicator
+  const [fetch, { data, isLoading }] = useLazyGetFavoriteRecipesQuery();
+  const favoritesUpdatedIndex = useAppSelector((state) => state.favorites.favoritesUpdatedIndex);
+
+  useEffect(() => {
+    fetch();
+  }, [favoritesUpdatedIndex]);
+
   return (
-    <ScrollView>
+    (data && data.length > 0 &&
+      <ScrollView>
+        <View style={styles.container}>
+          {data.map((recipe) => (
+            <BigRecipeWidget key={recipe._id} data={recipe} />
+          ))}
+        </View>
+      </ScrollView>
+    ) || (data && data.length === 0 &&
       <View style={styles.container}>
-        {recipe.map(item => (
-          <BigRecipeWidget data={item} />
-        ))}
+        <Text style={styles.header}>No favorite recipes yet!</Text>
+        <Button
+          title="Go to Explore"
+          onPress={() => navigation.navigate(MainScreens.EXPLORE)}
+        />
       </View>
-    </ScrollView>
+    )
   );
 };
 
