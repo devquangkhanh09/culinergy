@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
-import { MainScreens, RootScreens } from '..';
+import { MainScreens, RootScreens, TabBarScreens } from '..';
 import { BigRecipeWidget } from '@/Components/Recipe/BigRecipeWidget';
 import { useLazyGetFavoriteRecipesQuery } from '@/Services/recipes';
 import { useAppSelector } from '@/Hooks';
 
 type FavoritesScreenNavigatorProps = {
   navigation: {
-    navigate: (screen: RootScreens | MainScreens) => void;
+    navigate: (screen: TabBarScreens | MainScreens) => void;
   };
 }
 
@@ -36,7 +36,7 @@ export const Favorites = ({
         <Text style={styles.header}>No favorite recipes yet!</Text>
         <Button
           title="Go to Explore"
-          onPress={() => navigation.navigate(MainScreens.EXPLORE)}
+          onPress={() => navigation.navigate(TabBarScreens.EXPLORE)}
         />
       </View>
     ) || <></>

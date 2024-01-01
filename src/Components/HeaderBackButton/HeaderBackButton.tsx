@@ -7,7 +7,6 @@ const CustomHeaderBackButton = () => {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    // TODO: handle case where user is not in a stack navigator (e.g. on the explore screen)
     navigation.goBack();
   };
 

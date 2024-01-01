@@ -3,7 +3,7 @@ import { Colors } from "@/Theme/Variables";
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, View, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { CameraScreens, MainScreens } from "@/Screens";
+import { MainScreens, RootScreens } from "@/Screens";
 
 interface SimpleRecipeWidgetProps {
   data: Recipe;
@@ -13,9 +13,9 @@ const SimpleRecipeWidget: React.FC<SimpleRecipeWidgetProps> = ({ data }) => {
   const navigation = useNavigation<any>();
 
   const navigateToRecipeDetail = () => {
-    navigation.navigate(MainScreens.CAMERA, {
-      screen: CameraScreens.RECIPE_DETAIL,
-      params: { recipeId: data._id }
+    navigation.navigate(RootScreens.MAIN, {
+      screen: MainScreens.RECIPE_DETAIL,
+      params: { recipeId: data._id },
     });
   };
 
