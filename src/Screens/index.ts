@@ -17,14 +17,16 @@ export enum CameraScreens {
   RECIPE_DETAIL = 'Recipe Detail',
 }
 
+export enum SettingScreens {
+  INFO = 'Settings',
+  ALLERGENIC_INGREDIENS = 'Allergenic Ingredients',
+  CHANGE_PASSWORD = 'Change Password',
+}
+
 export enum MainScreens {
   HOME = 'Home',
   SETTINGS = 'Settings',
   CAMERA = 'Camera',
   EXPLORE = 'Explore',
   FAVORITES = 'Favorites',
-}
-
-export enum SettingsScreens {
-  CHANGE_PASSWORD = 'Change password',
 }

@@ -1,10 +1,12 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from 'react-native';
 
-export const ChangePassword = () => {
+const ChangePassword = () => {
   return (
-    <View style={styles.container}></View>
-  )
-}
+    <View style={styles.container}>
+      <Text>Change password</Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -20,6 +22,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 23,
-    boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.25)'
+    boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.25)',
   },
 });
+
+export default ChangePassword;
