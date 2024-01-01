@@ -1,26 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, Image, Pressable, Switch } from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  Image,
+  Pressable,
+  Switch,
+} from 'react-native';
 import { useAppDispatch } from '@/Hooks';
 import { setToken, unsetFirstTime } from '@/Store/reducers';
-import { AuthScreens, MainScreens, RootScreens, SettingsScreens } from '..';
+import { AuthScreens, MainScreens, RootScreens, SettingScreens } from '..';
+import { useNavigation } from '@react-navigation/native';
 
-// NOTE: The following code does not work (cannot navigate to RootScreens.LOGIN), but it is the correct way to type the navigation prop
-// type SettingsScreenNavigatorProps = BottomTabScreenProps<
-//   MainNavigatorProps,
-//   MainScreens.SETTINGS
-// >;
-type SettingsScreenNavigatorProps = {
-  navigation: {
-    navigate: (screen: AuthScreens | RootScreens | SettingsScreens) => void;
-  };
-};
-
-export const Settings = ({ navigation }: SettingsScreenNavigatorProps) => {
+export const Settings = () => {
+  const navigation = useNavigation<any>();
   const dispatch = useAppDispatch();
-  const [isVegetarian, setIsVegetarian] = useState<boolean>(false)
+  const [isVegetarian, setIsVegetarian] = useState<boolean>(false);
 
   const handleLogOut = () => {
-    // TODO: perform logout logic here
     dispatch(setToken(''));
     navigation.navigate(AuthScreens.LOGIN);
   };
@@ -45,24 +43,44 @@ export const Settings = ({ navigation }: SettingsScreenNavigatorProps) => {
       </View>
       <Text style={{ fontSize: 15 }}>example-culinergy@hcmut.edu.vn</Text>
       <View style={{ width: '100%', marginTop: 44, gap: 15 }}>
-        <Pressable style={styles.button}>
-          <Text
-            style={{ fontSize: 15 }}
-            // onPress={() => navigation.navigate(SettingsScreens.CHANGE_PASSWORD)}
-          >
-            Change password
-          </Text>
+        <Pressable
+          style={({ pressed }) => [
+            styles.button,
+            pressed && styles.buttonPressed,
+          ]}
+          onPress={() => navigation.navigate(SettingScreens.CHANGE_PASSWORD)}>
+          <Text style={{ fontSize: 15 }}>Change password</Text>
         </Pressable>
-        <Pressable style={styles.button}>
+        <Pressable
+          style={({ pressed }) => [
+            styles.button,
+            pressed && styles.buttonPressed,
+          ]}
+          onPress={() =>
+            navigation.navigate(SettingScreens.ALLERGENIC_INGREDIENS)
+          }>
           <Text style={{ fontSize: 15 }}>List of allergenic ingredients</Text>
         </Pressable>
         <View style={{ ...styles.button, flexDirection: 'row' }}>
           <Text style={{ fontSize: 15 }}>Are you a vegetarian?</Text>
-          <Switch value={isVegetarian} onValueChange={() => setIsVegetarian(!isVegetarian)} style={{ transform: [{ scaleX: .6 }, { scaleY: .6 }] }} />
+          <Switch
+            value={isVegetarian}
+            onValueChange={() => setIsVegetarian(!isVegetarian)}
+            style={{ transform: [{ scaleX: 0.6 }, { scaleY: 0.6 }] }}
+          />
         </View>
       </View>
-      <Pressable style={{ ...styles.button, width: 250, backgroundColor: '#0E1E22', marginVertical: 30 }} onPress={handleLogOut}>
-        <Text style={{ fontSize: 15, color: '#ffffff', fontWeight: '600' }}>Log out</Text>
+      <Pressable
+        style={{
+          ...styles.button,
+          width: 250,
+          backgroundColor: '#0E1E22',
+          marginVertical: 30,
+        }}
+        onPress={handleLogOut}>
+        <Text style={{ fontSize: 15, color: '#ffffff', fontWeight: '600' }}>
+          Log out
+        </Text>
       </Pressable>
       <Button title="Reset (development only)" onPress={handleReset} />
     </View>
@@ -83,6 +101,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 23,
-    boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.25)'
+    boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.25)',
+  },
+  buttonPressed: {
+    backgroundColor: 'transparent',
   },
 });

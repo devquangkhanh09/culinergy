@@ -10,6 +10,7 @@ import { Favorites } from '@/Screens/Favorites';
 import { Colors } from '@/Theme/Variables';
 import { View } from 'react-native';
 import { CameraStackScreen } from '../CameraNavigation/CameraNavigation';
+import { SettingStackScreen } from '../SettingNavigation/SettingNavigation';
 
 export type MainNavigatorProps = {
   [MainScreens.HOME]: undefined;
@@ -116,7 +117,7 @@ export const MainNavigator = () => {
 
       <Tab.Screen
         name={MainScreens.SETTINGS}
-        component={Settings}
+        component={SettingStackScreen}
         options={{
           tabBarIcon: ({ focused, color, size }) => (
             <Icon
@@ -126,6 +127,7 @@ export const MainNavigator = () => {
             />
           ),
           tabBarLabelPosition: 'below-icon',
+          headerShown: false,
         }}
       />
     </Tab.Navigator>
