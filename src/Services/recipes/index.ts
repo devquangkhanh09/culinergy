@@ -25,6 +25,7 @@ export interface RecommendedQuery {
 export interface RecipeQuery {
   ingredients?: number[];
   name?: string;
+  page?: number;
 }
 
 const recipeApi = API.injectEndpoints({

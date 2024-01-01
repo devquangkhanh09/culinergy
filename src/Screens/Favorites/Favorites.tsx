@@ -39,7 +39,7 @@ export const Favorites = ({
           onPress={() => navigation.navigate(MainScreens.EXPLORE)}
         />
       </View>
-    )
+    ) || <></>
   );
 };
 
