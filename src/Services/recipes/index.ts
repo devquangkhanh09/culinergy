@@ -1,5 +1,5 @@
+import { SimplifiedIngredient } from "@/Store/reducers";
 import { API } from "../base";
-import { Ingredient } from "../ingredients";
 
 export interface Recipe {
   _id: number;
@@ -15,7 +15,7 @@ export interface Recipe {
 }
 
 export interface RecipeDetail extends Recipe {
-  ingredients: Pick<Ingredient, '_id' | 'name'>[];
+  ingredients: SimplifiedIngredient[];
 }
 
 export interface RecommendedQuery {
@@ -23,7 +23,7 @@ export interface RecommendedQuery {
 }
 
 export interface RecipeQuery {
-  ingredients?: string[];
+  ingredients?: number[];
   name?: string;
 }
 
@@ -31,10 +31,9 @@ const recipeApi = API.injectEndpoints({
   endpoints: (build) => ({
     getRecommendedRecipes: build.query<Recipe[], RecommendedQuery>({
       query: (query) => ({
-        // TODO: fix query not working (have to change the url manually)
-        url: "recipes/recommended?ofTheDay=true",
+        url: "recipes/recommended",
         method: "GET",
-        query,
+        params: query,
       }),
     }),
 
@@ -61,9 +60,9 @@ const recipeApi = API.injectEndpoints({
 
     searchRecipes: build.query<Recipe[], RecipeQuery>({
       query: (query) => ({
-        url: "recipes/search",
+        url: "recipes",
         method: "GET",
-        query,
+        params: query,
       }),
     }),
   }),

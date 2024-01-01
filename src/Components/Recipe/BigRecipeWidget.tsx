@@ -1,5 +1,5 @@
 import { Recipe } from "@/Services/recipes";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dimensions, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,6 +17,10 @@ export const BigRecipeWidget = ({ data }: { data: Recipe }) => {
   const navigation = useNavigation<any>();
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    setRecipeData(data);
+  }, [data]);
+
   const handleToggleFavorite = async () => {
     if (recipeData.isFavorite === undefined) return;
 
@@ -31,11 +35,15 @@ export const BigRecipeWidget = ({ data }: { data: Recipe }) => {
     }
   };
 
-  return (
-    <Pressable onPress={() => navigation.navigate(MainScreens.CAMERA, {
+  const navigateToRecipeDetail = () => {
+    navigation.navigate(MainScreens.CAMERA, {
       screen: CameraScreens.RECIPE_DETAIL,
-      params: { recipeId: recipeData._id }
-    })}>
+      params: { recipeId: recipeData._id },
+    });
+  };
+
+  return (
+    <Pressable onPress={navigateToRecipeDetail}>
       <View style={styles.container}>
         <Image source={{ uri: recipeData.imageUrl }} style={{ width: '100%', height: maxWidth * 0.4, borderRadius: 15 }} />
         <View

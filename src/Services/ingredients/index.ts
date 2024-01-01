@@ -1,3 +1,4 @@
+import { SimplifiedIngredient } from "@/Store/reducers";
 import { API } from "../base";
 
 export interface Ingredient {
@@ -9,7 +10,7 @@ export interface Ingredient {
 
 const ingredientApi = API.injectEndpoints({
   endpoints: (build) => ({
-    getIngredients: build.query<Pick<Ingredient, '_id' | 'name'>[], void>({
+    getIngredients: build.query<SimplifiedIngredient[], void>({
       query: () => ({
         url: "ingredients",
         method: "GET",
@@ -26,6 +27,6 @@ const ingredientApi = API.injectEndpoints({
 });
 
 export const { 
-  useGetIngredientsQuery, 
-  useGetIngredientQuery
+  useLazyGetIngredientsQuery, 
+  useLazyGetIngredientQuery
 } = ingredientApi;

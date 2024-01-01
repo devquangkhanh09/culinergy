@@ -9,6 +9,8 @@ import SimpleRecipeWidget from '@/Components/Recipe/SimpleRecipeWidget';
 import SelectionModal from '@/Components/Modal/SelectionModal';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Colors } from '@/Theme/Variables';
+import { useLazyGetIngredientsQuery } from '@/Services/ingredients';
+import { useLazySearchRecipesQuery } from '@/Services/recipes';
 
 type ExploreScreenNavigatorProps = {
   navigation: {
@@ -16,63 +18,57 @@ type ExploreScreenNavigatorProps = {
   };
 }
 
-const sampleIngredients = [
-  'Chicken',
-  'Beef',
-  'Pork',
-  'Fish',
-  'Shrimp',
-  'Egg',
-  'Milk',
-  'Cheese',
-  'Potato',
-  'Carrot',
-  'Tomato',
-]
-
-const sampleRecipes = [
-  {
-    id: 1,
-    name: 'Chicken Adobo with Rice',
-    img: require('../../../assets/recipe/recipe-1.png'),
-  },
-  {
-    id: 2,
-    name: 'Chicken',
-    img: require('../../../assets/recipe/recipe-2.png'),
-  },
-  {
-    id: 3,
-    name: 'Chicken Soup',
-    img: require('../../../assets/recipe/recipe-2.png'),
-  },
-]
-
+// TODO: improve performance by using pagination
+// TODO: fix the bug and warning printed in the console
 export const Explore = ({
   navigation,
 }: ExploreScreenNavigatorProps) => {
   const [isIngredientModalVisible, setIsIngredientModalVisible] = useState(false);
-  
+  const [searchText, setSearchText] = useState('');
+  // TODO: show loading indicator
+  const [fetchIngredients, { data: ingredientsData }] = useLazyGetIngredientsQuery();
+  const [fetchRecipes, { data: recipesData }] = useLazySearchRecipesQuery();
   const selectedIngredients = useAppSelector(state => state.explore.selectedIngredients);
+  const ingredients = useAppSelector(state => state.explore.ingredients);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    fetchIngredients();
+  }, []);
 
   const handleSelectionComplete = () => {
     setIsIngredientModalVisible(false);
+    if (selectedIngredients.length === 0) return;
+
+    fetchRecipes({
+      ingredients: selectedIngredients.map((ingredient) => ingredient._id),
+      name: searchText,
+    });
+  };
+
+  const handleSearchChange = (text: string) => {
+    setSearchText(text);
+    if (text.length < 3) return;
+
+    fetchRecipes({
+      ingredients: selectedIngredients.map((ingredient) => ingredient._id),
+      name: text,
+    });
   };
 
   return (
     <ScrollView>
       <View style={styles.container}>
         <SearchInput
-          placeholder='Search'
+          placeholder='Search (enter at least 3 characters)'
           prefixIcon={<Icon name='search' size={20} color='#000' />}
-          onSearch={(text) => console.log(text)}
+          onSearch={handleSearchChange}
         />
 
         <SelectionModal
           isVisible={isIngredientModalVisible}
           title='Select ingredients'
-          options={sampleIngredients}
+          options={ingredientsData? ingredientsData : []}
           storeKey='explore'
           reducer={toggleIngredient}
           onSelectionComplete={handleSelectionComplete}
@@ -88,19 +84,18 @@ export const Explore = ({
           {selectedIngredients.map((ingredient, idx) => (
             <RemovableChip
               key={idx}
-              text={ingredient}
-              onRemove={(value) => dispatch(toggleIngredient(value))}
+              item={ingredient}
+              onRemove={(item) => dispatch(toggleIngredient(item))}
             />
           ))}
         </View>
 
         <Text style={styles.subheader}>Recipes</Text>
         <View style={styles.recipesContainer}>
-          {sampleRecipes.map((recipe) => (
+          {recipesData && recipesData.map((recipe) => (
             <SimpleRecipeWidget
-              key={recipe.id}
-              name={recipe.name}
-              img={recipe.img}
+              key={recipe._id}
+              data={recipe}
             />
           ))}
         </View>

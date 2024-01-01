@@ -1,17 +1,30 @@
+import { Recipe } from "@/Services/recipes";
 import { Colors } from "@/Theme/Variables";
 import React, { useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View, Pressable } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { CameraScreens, MainScreens } from "@/Screens";
 
 interface SimpleRecipeWidgetProps {
-  img: any;
-  name: string;
+  data: Recipe;
 }
 
-const SimpleRecipeWidget: React.FC<SimpleRecipeWidgetProps> = ({ img, name }) => {
+const SimpleRecipeWidget: React.FC<SimpleRecipeWidgetProps> = ({ data }) => {
+  const navigation = useNavigation<any>();
+
+  const navigateToRecipeDetail = () => {
+    navigation.navigate(MainScreens.CAMERA, {
+      screen: CameraScreens.RECIPE_DETAIL,
+      params: { recipeId: data._id }
+    });
+  };
+
   return (
     <View style={styles.container}>
-      <Image source={img} style={styles.image} />
-      <Text style={styles.name}>{name}</Text>
+      <Pressable onPress={navigateToRecipeDetail}>
+        <Image source={{ uri: data.imageUrl }} style={styles.image} />
+        <Text style={styles.name}>{data.name}</Text>
+      </Pressable>
     </View>
   )
 }
