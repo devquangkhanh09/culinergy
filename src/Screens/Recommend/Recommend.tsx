@@ -1,49 +1,70 @@
-import { View, Text, StyleSheet, FlatList, Dimensions } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
 import { RecommendCard } from './RecommendCard/RecommendCard';
 import CustomButton from '@/Components/Button/Button';
 import { MainScreens } from '..';
 import { useNavigation } from '@react-navigation/native';
+import { useAppSelector } from '@/Hooks';
+import axios from 'axios';
+import { useLazyGetRecipeQuery } from '@/Services/recipes';
 
 export default function Recommend() {
+  const ingredientList = useAppSelector((state) => state.ingredientList);
+  const [recipeList, setRecipeList] = useState<any>([]);
+  const [loading, setLoading] = useState(true); // Add loading state
+  const [getRecipeByID] = useLazyGetRecipeQuery();
+
+  useEffect(() => {
+    const preProcessingList = async (recipeIDs: any) => {
+      const newArray = [];
+
+      for (const id of recipeIDs.food_ids) {
+        const recipeObject = await getRecipeByID(id);
+        newArray.push(recipeObject);
+      }
+
+      return newArray;
+    };
+    const fetchRecommendDishes = async () => {
+      try {
+        const response = await axios.post(
+          'https://culinergy-ai.hungnhb.dev/recommend',
+          {
+            ingredient_ids: ingredientList.ingredientListIDs,
+          }
+        );
+        const recipeListData = await preProcessingList(response.data);
+        setRecipeList(recipeListData);
+        setLoading(false); // Set loading to false when data is fetched
+      } catch (error) {
+        console.error('Scanner Error:', error);
+      }
+    };
+    fetchRecommendDishes();
+  }, [ingredientList.ingredientListIDs]);
+
   const navigator = useNavigation<any>();
-  const recommendData = [
-    {
-      id: 1,
-      title: 'Tomato pasta',
-      subTitle:
-        'Tasty traditional dish. Not only for Italian who when to Malta',
-      badge: [
-        { id: 1, name: 'Grape' },
-        { id: 2, name: 'Chicken' },
-      ],
-      time: '45 mins',
-    },
-    {
-      id: 2,
-      title: 'Chicken soup',
-      subTitle:
-        'Tasty traditional dish. Not only for Italian who when to Malta',
-      badge: [
-        { id: 1, name: 'Grape' },
-        { id: 2, name: 'Chicken' },
-        { id: 3, name: 'Apple' },
-      ],
-      time: '15 mins',
-    },
-    {
-      id: 3,
-      title: 'Chicken soup',
-      subTitle:
-        'Tasty traditional dish. Not only for Italian who when to Malta',
-      badge: [
-        { id: 1, name: 'Grape' },
-        { id: 2, name: 'Chicken' },
-        { id: 3, name: 'Apple' },
-      ],
-      time: '15 mins',
-    },
-  ];
+
+  const recommendData =
+    recipeList &&
+    recipeList.map((recipe: any) => {
+      return {
+        id: recipe.data._id,
+        title: recipe.data.name,
+        subTitle: recipe.data.description,
+        badge: recipe.data.ingredients,
+        imageUrl: recipe.data.imageUrl,
+        time: recipe.data.timeToCook,
+      };
+    });
+
   return (
     <View style={styles.container}>
       <Text style={styles.textHeader}>
@@ -52,15 +73,19 @@ export default function Recommend() {
       <Text style={styles.textSubHeader}>
         Pick one and become a master chef!
       </Text>
-      <FlatList
-        data={recommendData}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <RecommendCard data={item} />}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#000" />
+      ) : (
+        <FlatList
+          data={recommendData}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => <RecommendCard data={item} />}
+        />
+      )}
       <CustomButton
         title="Back to Home"
         style={styles.customButton}
-        onPress={() => navigator.navigate(MainScreens.HOME)}
+        onPress={() => navigator.navigate(MainScreens.TAB_BAR)}
       />
     </View>
   );

@@ -1,38 +1,51 @@
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ScrollableTable from './ScrollableTable/ScrollableTable';
+import { useLazyGetIngredientQuery } from '@/Services/ingredients';
+import { useAppSelector } from '@/Hooks';
 
 export default function IngredientDetail() {
-  const data = [
-    { nutrition: 'Protein', amount: '20g' },
-    { nutrition: 'Carbohydrates', amount: '30g' },
-    { nutrition: 'Fiber', amount: '10g' },
-    { nutrition: 'Fat', amount: '15g' },
-    { nutrition: 'Vitamin A', amount: '500 IU' },
-    { nutrition: 'Vitamin C', amount: '30mg' },
-    { nutrition: 'Calcium', amount: '200mg' },
-    { nutrition: 'Iron', amount: '5mg' },
-    { nutrition: 'Sodium', amount: '400mg' },
-    { nutrition: 'Potassium', amount: '300mg' },
-    { nutrition: 'Magnesium', amount: '50mg' },
-    { nutrition: 'Zinc', amount: '3mg' },
-    { nutrition: 'Phosphorus', amount: '250mg' },
-    { nutrition: 'Biotin', amount: '30mcg' },
-    { nutrition: 'Folate', amount: '400mcg' },
-    { nutrition: 'Niacin', amount: '20mg' },
-    { nutrition: 'Riboflavin', amount: '2mg' },
-    { nutrition: 'Thiamine', amount: '1.5mg' },
-    { nutrition: 'Pantothenic Acid', amount: '10mg' },
-  ];
+  const ingredient = useAppSelector((state) => state.ingredient);
+
+  const [getIngredientByID] = useLazyGetIngredientQuery();
+  const [ingredientDetail, setIngredientDetail] = useState<any>(null);
+
+  useEffect(() => {
+    if (ingredient.ingredientID === 0) return;
+
+    const fetchIngredientDetail = async () => {
+      try {
+        const result = await getIngredientByID(ingredient.ingredientID);
+        setIngredientDetail(result);
+      } catch (error) {
+        console.error('Error fetching ingredient details:', error);
+      }
+    };
+
+    fetchIngredientDetail();
+  }, [getIngredientByID, ingredient.ingredientID]);
+
+  const data = ingredientDetail
+    ? Object.entries(ingredientDetail.data.nutritionInfo).map(
+        ([nutrition, amount]) => ({
+          nutrition,
+          amount: amount as string,
+        })
+      )
+    : [];
+
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.textHeader}>Chicken</Text>
-        <Text style={styles.textSubHeader}>
-          Pellentesque viverra congue neque, nec elementum elit posuere id.
-          Curabitur.
-        </Text>
-        <ScrollableTable data={data} />
+        {ingredientDetail && (
+          <>
+            <Text style={styles.textHeader}>{ingredientDetail.data.name}</Text>
+            <Text style={styles.textSubHeader}>
+              {ingredientDetail.data.description}
+            </Text>
+          </>
+        )}
+        {data.length > 0 && <ScrollableTable data={data} />}
       </View>
     </View>
   );

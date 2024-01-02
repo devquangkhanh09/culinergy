@@ -22,6 +22,9 @@ import { cameraReducers } from './reducers/camera';
 import { exploreReducers } from './reducers/explore';
 import { favoritesReducers } from './reducers/favorites';
 import { modalReducers } from './reducers/modal';
+import { ingredientReducers } from './reducers/ingredient';
+import { recipeReducers } from './reducers/recipe';
+import { ingredientListReducers } from './reducers/ingredientsList';
 
 const reducers = combineReducers({
   api: API.reducer,
@@ -33,6 +36,9 @@ const reducers = combineReducers({
   explore: exploreReducers,
   favorites: favoritesReducers,
   modal: modalReducers,
+  ingredient: ingredientReducers,
+  ingredientList: ingredientListReducers,
+  recipe: recipeReducers,
 });
 
 const persistConfig = {

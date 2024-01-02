@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   FlatList,
@@ -12,27 +12,43 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { MainScreens } from '@/Screens';
+import { useAppDispatch } from '@/Hooks';
+import { setIngredientByID } from '@/Store/reducers/ingredient';
 
 export interface IngredientProps {
-  box: number[]; // [top, left, bottom, right]
-  id: number;
+  ingredient_id: number;
+  image: string;
   name: string;
 }
 
 interface IngredientListProps {
-  originalImage: string;
   ingredientList?: IngredientProps[];
 }
 
-const IngredientsList = ({
-  originalImage,
-  ingredientList,
-}: IngredientListProps) => {
+const IngredientsList = ({ ingredientList }: IngredientListProps) => {
   const navigator = useNavigation<any>();
+  const dispatch = useAppDispatch();
+
+  const [showIndicator, setShowIndicator] = useState(true);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setShowIndicator(false);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+  const handleClickIngredient = (item: any) => {
+    dispatch(setIngredientByID(item.ingredient_id));
+    navigator.navigate(MainScreens.INGREDIENT_DETAIL);
+  };
 
   const renderItem = ({ item }: { item: IngredientProps }) => (
     <Pressable
-      onPress={() => navigator.navigate(MainScreens.INGREDIENT_DETAIL)}
+      onPress={() => handleClickIngredient(item)}
       style={({ pressed }) => [
         styles.card,
         {
@@ -40,7 +56,7 @@ const IngredientsList = ({
         },
       ]}>
       <Image
-        source={{ uri: 'https://picsum.photos/200/300' }}
+        source={{ uri: `data:image/png;base64,${item.image}` }}
         style={styles.image}
       />
       <Text style={styles.name}>{item.name}</Text>
@@ -50,19 +66,27 @@ const IngredientsList = ({
 
   return (
     <View style={styles.container}>
-      {ingredientList && ingredientList.length > 0 ? (
-        <FlatList
-          data={ingredientList}
-          keyExtractor={(item, index) => (item.id || index).toString()}
-          renderItem={renderItem}
-          contentContainerStyle={styles.listContainer}
-        />
-      ) : (
+      {showIndicator ? (
         <ActivityIndicator
           style={styles.loadingIndicator}
           size="large"
           color="#000"
         />
+      ) : (
+        <>
+          {ingredientList && ingredientList.length > 0 ? (
+            <FlatList
+              data={ingredientList}
+              keyExtractor={(item, index) =>
+                (item.ingredient_id || index).toString()
+              }
+              renderItem={renderItem}
+              contentContainerStyle={styles.listContainer}
+            />
+          ) : (
+            <Text style={styles.notFound}>No ingredients detected</Text>
+          )}
+        </>
       )}
     </View>
   );
@@ -89,6 +113,11 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width * 0.7,
     borderWidth: 1,
     borderColor: '#D1D1D1',
+  },
+  notFound: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 100,
   },
   image: {
     width: 60,
