@@ -1,21 +1,57 @@
 import { Home } from './Home';
-import React, { useState, useEffect } from 'react';
-import { useLazyGetUserQuery } from '@/Services';
-import { ScrollView } from 'react-native';
+import React, { useEffect } from 'react';
+import { useLazyGetProfileQuery } from '@/Services';
+import { useLazyGetRecommendedRecipesQuery } from '@/Services/recipes';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { MainScreens } from '..';
+import { useAppSelector } from '@/Hooks';
+import { LoadingIndicator } from '@/Components/Indicator/LoadingIndicator';
 
-export const HomeContainer = () => {
-  const [userId, setUserId] = useState('9');
+type HomeScreenNavigatorProps = {
+  navigation: {
+    navigate: (screen: MainScreens) => void;
+  };
+}
 
-  const [fetchOne, { data, isSuccess, isLoading, isFetching, error }] =
-    useLazyGetUserQuery();
+export const HomeContainer = ({ navigation }: HomeScreenNavigatorProps) => {
+  const [fetchProfile, { data: profileData, isLoading: isLoading }] = useLazyGetProfileQuery();
+  const [fetchRecommended, { data: recipesData, isLoading: isLoading2 }] = useLazyGetRecommendedRecipesQuery();
+  const favoritesUpdatedIndex = useAppSelector((state) => state.favorites.favoritesUpdatedIndex);
 
   useEffect(() => {
-    fetchOne(userId);
-  }, [fetchOne, userId]);
+    fetchProfile();
+    fetchRecommended({
+      ofTheDay: true,
+    });
+  }, []);
+
+  useEffect(() => {
+    fetchRecommended({
+      ofTheDay: true,
+    });
+  }, [favoritesUpdatedIndex]);
 
   return (
-    <ScrollView>
-      <Home data={data} isLoading={isLoading} />
-    </ScrollView>
+    <View style={styles.container}>
+      {isLoading || isLoading2 ? <LoadingIndicator /> : (
+        <ScrollView>
+          <Home data={{
+            profile: profileData,
+            recipes: recipesData,
+          }}
+          />
+        </ScrollView>
+      )}
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#f6f6f7",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    height: '100%',
+  },
+});

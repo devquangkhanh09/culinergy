@@ -2,17 +2,18 @@ import { Colors } from '@/Theme/Variables';
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { SelectItem } from '../Modal/SelectionModal';
 
 interface RemovableChipProps {
-  text: string;
-  onRemove: (value: string) => void;
+  item: SelectItem;
+  onRemove: (item: SelectItem) => void;
 }
 
-const RemovableChip: React.FC<RemovableChipProps> = ({ text, onRemove }) => {
+const RemovableChip: React.FC<RemovableChipProps> = ({ item, onRemove }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{text}</Text>
-      <Icon name='close' size={20} color='#fff' onPress={() => onRemove(text)} />
+      <Text style={styles.text}>{item.name}</Text>
+      <Icon name='close' size={20} color='#fff' onPress={() => onRemove(item)} />
     </View>
   );
 };

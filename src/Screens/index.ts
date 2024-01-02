@@ -13,17 +13,21 @@ export enum CameraScreens {
   SCANNER = 'Scanner',
   SCANNER_RESULT = 'Scanner Result',
   RECOMMENDATION = 'Recommendation',
-  INGREDIENT_DETAIL = 'Ingredient Detail',
-  RECIPE_DETAIL = 'Recipe Detail',
 }
 
 export enum SettingScreens {
-  INFO = 'Settings',
+  INFO = 'Settings Info',
   ALLERGENIC_INGREDIENS = 'Allergenic Ingredients',
   CHANGE_PASSWORD = 'Change Password',
 }
 
 export enum MainScreens {
+  TAB_BAR = 'Tab Bar',
+  INGREDIENT_DETAIL = 'Ingredient Detail',
+  RECIPE_DETAIL = 'Recipe Detail',
+}
+
+export enum TabBarScreens {
   HOME = 'Home',
   SETTINGS = 'Settings',
   CAMERA = 'Camera',

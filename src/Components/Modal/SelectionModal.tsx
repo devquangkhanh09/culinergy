@@ -5,32 +5,36 @@ import GeneralModal from './GeneralModal';
 import SearchInput from '../Input/SearchInput';
 import { useAppSelector, useAppDispatch } from '@/Hooks';
 
-// TODO: refactor this component to be more reusable
+export interface SelectItem {
+  _id: number;
+  name: string;
+}
 
 interface SelectionModalProps {
   isVisible: boolean;
   title: string;
-  options: string[];
+  options: SelectItem[];
   storeKey: 'explore';
   reducer: any;
   onSelectionComplete: () => void;
 }
 
+// TODO: refactor this component to be more reusable
 const SelectionModal: React.FC<SelectionModalProps> = ({ isVisible, title, options, storeKey, reducer, onSelectionComplete }) => {
   const [search, setSearch] = useState('');
 
   const selectedOptions = useAppSelector(state => state[storeKey].selectedIngredients);
   const dispatch = useAppDispatch();
 
-  const toggleOption = (option: string) => {
+  const toggleOption = (option: SelectItem) => {
     dispatch(reducer(option));
   };
 
-  const filteredOptions = options.filter(option => option.toLowerCase().includes(search.toLowerCase()));
+  const filteredOptions = options.filter(option => option.name.toLowerCase().includes(search.toLowerCase()));
 
-  const renderItem = ({ item }: { item: string }) => (
+  const renderItem = ({ item }: { item: SelectItem }) => (
     <TouchableOpacity style={styles.selectItem} onPress={() => toggleOption(item)}>
-      <Text style={styles.selectItemText}>{item}</Text>
+      <Text style={styles.selectItemText}>{item.name}</Text>
       {selectedOptions.includes(item) && <Icon name='checkmark' size={20} color='#000' />}
     </TouchableOpacity>
   );
@@ -54,7 +58,7 @@ const SelectionModal: React.FC<SelectionModalProps> = ({ isVisible, title, optio
           style={styles.list}
           data={filteredOptions}
           renderItem={renderItem}
-          keyExtractor={(item) => item}
+          keyExtractor={(item) => item._id.toString()}
         />
       </View>
     </GeneralModal>

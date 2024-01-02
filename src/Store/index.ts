@@ -20,6 +20,7 @@ import {
 } from './reducers';
 import { cameraReducers } from './reducers/camera';
 import { exploreReducers } from './reducers/explore';
+import { favoritesReducers } from './reducers/favorites';
 
 const reducers = combineReducers({
   api: API.reducer,
@@ -29,6 +30,7 @@ const reducers = combineReducers({
   user: userReducers,
   camera: cameraReducers,
   explore: exploreReducers,
+  favorites: favoritesReducers,
 });
 
 const persistConfig = {
@@ -43,9 +45,8 @@ const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) => {
     const middlewares = getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
+      serializableCheck: false,
+      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
     }).concat(API.middleware);
 
     // if (__DEV__ && !process.env.JEST_WORKER_ID) {
