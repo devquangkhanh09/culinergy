@@ -9,7 +9,7 @@ interface UserState {
   profile: User;
 }
 
-const initialProfile: User = {
+const guestProfile: User = {
   _id: "",
   name: "Guest",
   email: "",
@@ -21,7 +21,7 @@ const initialProfile: User = {
 const initialState: UserState = {
   isGuest: false,
   token: "",
-  profile: initialProfile,
+  profile: guestProfile,
 };
 
 const slice = createSlice({
@@ -31,11 +31,14 @@ const slice = createSlice({
     setGuest: (state) => {
       state.isGuest = true;
       state.token = "";
-      state.profile = initialProfile;
+      state.profile = guestProfile;
     },
     setToken: (state, action) => {
       state.token = action.payload;
       state.isGuest = false;
+      if (action.payload === "") {
+        state.profile = guestProfile;
+      }
     },
 
     setUserProfile: (state, action: PayloadAction<User>) => {

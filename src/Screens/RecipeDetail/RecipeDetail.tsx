@@ -20,6 +20,7 @@ import { useAppDispatch } from '@/Hooks';
 import { updateFavorites } from '@/Store/reducers/favorites';
 import { LoadingIndicator } from '@/Components/Indicator/LoadingIndicator';
 import { MainNavigatorProps } from '@/Navigation/Main';
+import { activateUserOnlyModal } from '@/Store/reducers/modal';
 
 type RecipeDetailScreenNavigationProp = NativeStackScreenProps<
   MainNavigatorProps,
@@ -45,7 +46,10 @@ export default function RecipeDetail ({ route }: RecipeDetailScreenNavigationPro
   }, [data]);
 
   const handleToggleFavorite = async () => {
-    if (!recipeData || recipeData.isFavorite === undefined) return;
+    if (!recipeData || recipeData.isFavorite === undefined) {
+      dispatch(activateUserOnlyModal());
+      return;
+    }
 
     const response = await toggleFavoriteRecipe(recipeData._id);
 

@@ -9,6 +9,9 @@ import { Colors } from '@/Theme/Variables';
 import { View } from 'react-native';
 import { CameraStackScreen } from '../CameraNavigation/CameraNavigation';
 import { SettingStackScreen } from '../SettingNavigation/SettingNavigation';
+import { useAppSelector, useAppDispatch } from '@/Hooks';
+import { activateUserOnlyModal } from '@/Store/reducers/modal';
+import { useNavigation } from '@react-navigation/native';
 
 export type TabBarNavigatorProps = {
   [TabBarScreens.HOME]: undefined;
@@ -22,6 +25,19 @@ const Tab = createBottomTabNavigator<TabBarNavigatorProps>();
 
 // @refresh reset
 export const TabBarNavigator = () => {
+  const user = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation<any>();
+
+  const handlePress = (screen: TabBarScreens) => {
+    if (user.isGuest) {
+      dispatch(activateUserOnlyModal());
+      navigation.navigate(MainScreens.TAB_BAR);
+    } else {
+      navigation.navigate(screen);
+    }
+  };
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -87,6 +103,7 @@ export const TabBarNavigator = () => {
                   name={focused ? 'scan' : 'scan-outline'}
                   color={color}
                   size={size}
+                  onPress={() => handlePress(TabBarScreens.CAMERA)}
                 />
               </View>
             </View>
@@ -106,6 +123,7 @@ export const TabBarNavigator = () => {
               name={focused ? 'heart' : 'heart-outline'}
               color={color}
               size={size}
+              onPress={() => handlePress(TabBarScreens.FAVORITES)}
             />
           ),
           tabBarLabelPosition: 'below-icon',
