@@ -10,13 +10,16 @@ import React from 'react';
 import Badge from '@/Components/Badge/Badge';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
-import { CameraScreens } from '@/Screens';
+import { CameraScreens, MainScreens } from '@/Screens';
+import { useDispatch } from 'react-redux';
+import { setRecipeByID } from '@/Store/reducers/recipe';
 
 interface RecommendCardProps {
   data: {
     id: number;
     title: string;
     subTitle: string;
+    imageUrl: string;
     badge: { id: number; name: string }[];
     time: string;
   };
@@ -24,8 +27,10 @@ interface RecommendCardProps {
 
 export const RecommendCard = ({ data }: RecommendCardProps) => {
   const navigator = useNavigation<any>();
+  const dispatch = useDispatch();
   const handlePress = () => {
-    navigator.navigate(CameraScreens.RECIPE_DETAIL);
+    dispatch(setRecipeByID(data.id));
+    navigator.navigate(MainScreens.RECIPE_DETAIL);
   };
   return (
     <Pressable
@@ -34,10 +39,7 @@ export const RecommendCard = ({ data }: RecommendCardProps) => {
         styles.container,
         pressed && styles.containerPressed,
       ]}>
-      <Image
-        source={{ uri: 'https://picsum.photos/200/300' }}
-        style={styles.image}
-      />
+      <Image source={{ uri: data.imageUrl }} style={styles.image} />
       <View style={styles.textRecommendBlock}>
         <Text style={styles.textRecommendHeader}>{data.title}</Text>
         <Text style={styles.textRecommendDescription}>{data.subTitle}</Text>
@@ -86,7 +88,7 @@ const styles = StyleSheet.create({
   },
   textRecommendBlock: {
     flexDirection: 'column',
-    width: Dimensions.get('window').width * 0.45,
+    width: Dimensions.get('window').width * 0.5,
     paddingVertical: 10,
     paddingHorizontal: 15,
   },

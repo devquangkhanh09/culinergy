@@ -16,7 +16,7 @@ import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { CameraScreens, MainScreens } from '..';
 import { Recipe, useLazyGetRecipeQuery } from '@/Services/recipes';
 import { useToggleFavoriteRecipeMutation } from '@/Services/recipes';
-import { useAppDispatch } from '@/Hooks';
+import { useAppDispatch, useAppSelector } from '@/Hooks';
 import { updateFavorites } from '@/Store/reducers/favorites';
 import { LoadingIndicator } from '@/Components/Indicator/LoadingIndicator';
 import { MainNavigatorProps } from '@/Navigation/Main';
@@ -27,17 +27,18 @@ type RecipeDetailScreenNavigationProp = NativeStackScreenProps<
   MainScreens.RECIPE_DETAIL
 >;
 
-export default function RecipeDetail ({ route }: RecipeDetailScreenNavigationProp) {
-  const { recipeId } = route.params;
-  // TODO: show loading indicator
+export default function RecipeDetail({
+  route,
+}: RecipeDetailScreenNavigationProp) {
+  const recipe = useAppSelector((state) => state.recipe);
   const [fetchOne, { data, isLoading }] = useLazyGetRecipeQuery();
   const [recipeData, setRecipeData] = useState(data);
   const [toggleFavoriteRecipe] = useToggleFavoriteRecipeMutation();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    fetchOne(recipeId);
-  }, [route.params.recipeId]);
+    fetchOne(recipe.recipeID);
+  }, []);
 
   useEffect(() => {
     if (data) {
@@ -67,8 +68,9 @@ export default function RecipeDetail ({ route }: RecipeDetailScreenNavigationPro
     }
   };
 
-  return (
-    (isLoading || !recipeData) ? <LoadingIndicator /> : (
+  return isLoading || !recipeData ? (
+    <LoadingIndicator />
+  ) : (
     <ScrollView style={styles.container}>
       <View style={styles.imageContainer}>
         <Image
@@ -136,7 +138,6 @@ export default function RecipeDetail ({ route }: RecipeDetailScreenNavigationPro
         </View>
       </View>
     </ScrollView>
-    )
   );
 }
 
@@ -224,4 +225,3 @@ const styles = StyleSheet.create({
 function toggleFavoriteRecipe(_id: number) {
   throw new Error('Function not implemented.');
 }
-

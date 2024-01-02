@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Image, StyleSheet, Dimensions, Text } from 'react-native';
-import { useAppSelector } from '@/Hooks';
+import { useAppDispatch, useAppSelector } from '@/Hooks';
 
 import CustomButton from '@/Components/Button/Button';
 import { useNavigation } from '@react-navigation/native';
@@ -11,6 +11,7 @@ import { useLazyGetIngredientQuery } from '@/Services/ingredients';
 import IngredientsList, {
   IngredientProps,
 } from './IngredientsList/IngredientsList';
+import { setIngredientListIDs } from '@/Store/reducers/ingredientsList';
 
 export default function ScannerScreen() {
   const camera = useAppSelector((state) => state.camera);
@@ -18,6 +19,8 @@ export default function ScannerScreen() {
   const targetHeight = screenHeight * 0.4;
   const imageUrl = camera.imageUrl.base64;
   const navigator = useNavigation<any>();
+  const dispatch = useAppDispatch();
+  const [imageRecoginison, setImageRecoginison] = useState('');
 
   const [getIngredientByID] = useLazyGetIngredientQuery();
   const [ingredientList, setIngredientList] = useState<IngredientProps[]>([]);
@@ -48,8 +51,8 @@ export default function ScannerScreen() {
           }
         );
         const newData = await preProcessingList(response.data);
-        setIngredientList(newData);
-        console.log('Scanner Data:', newData);
+        setIngredientList(newData.slice(1));
+        setImageRecoginison(newData[0].image);
       } catch (error) {
         console.error('Scanner Error:', error);
       }
@@ -58,10 +61,18 @@ export default function ScannerScreen() {
     sendImageToScanner();
   }, [camera]);
 
+  const handleSelectRecipe = () => {
+    const ingredientIDs = ingredientList.map(
+      (ingredient) => ingredient.ingredient_id
+    );
+    dispatch(setIngredientListIDs(ingredientIDs));
+    navigator.navigate(CameraScreens.RECOMMENDATION);
+  };
+
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: `data:image/jpeg;base64,${imageUrl}` }}
+        source={{ uri: `data:image/jpeg;base64,${imageRecoginison}` }}
         style={{ width: '100%', height: targetHeight }}
         resizeMode="cover"
       />
@@ -71,14 +82,13 @@ export default function ScannerScreen() {
           <Text style={styles.ingredientsText}>Detected Ingredients</Text>
         </View>
         <IngredientsList
-          originalImage={imageUrl && imageUrl}
           ingredientList={ingredientList ? ingredientList : []}
         />
       </View>
       <CustomButton
         title="See Recipes"
         style={styles.customButton}
-        onPress={() => navigator.navigate(CameraScreens.RECOMMENDATION)}
+        onPress={handleSelectRecipe}
       />
     </View>
   );
