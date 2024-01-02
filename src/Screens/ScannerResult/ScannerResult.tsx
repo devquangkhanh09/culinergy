@@ -72,7 +72,7 @@ export default function ScannerScreen() {
         </View>
         <IngredientsList
           originalImage={imageUrl && imageUrl}
-          ingredientList={ingredientList}
+          ingredientList={ingredientList ? ingredientList : []}
         />
       </View>
       <CustomButton

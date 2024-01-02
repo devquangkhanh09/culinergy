@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   FlatList,
@@ -30,6 +30,18 @@ const IngredientsList = ({
 }: IngredientListProps) => {
   const navigator = useNavigation<any>();
 
+  const [showIndicator, setShowIndicator] = useState(true);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setShowIndicator(false);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
   const renderItem = ({ item }: { item: IngredientProps }) => (
     <Pressable
       onPress={() => navigator.navigate(MainScreens.INGREDIENT_DETAIL)}
@@ -50,19 +62,25 @@ const IngredientsList = ({
 
   return (
     <View style={styles.container}>
-      {ingredientList && ingredientList.length > 0 ? (
-        <FlatList
-          data={ingredientList}
-          keyExtractor={(item, index) => (item.id || index).toString()}
-          renderItem={renderItem}
-          contentContainerStyle={styles.listContainer}
-        />
-      ) : (
+      {showIndicator ? (
         <ActivityIndicator
           style={styles.loadingIndicator}
           size="large"
           color="#000"
         />
+      ) : (
+        <>
+          {ingredientList && ingredientList.length > 0 ? (
+            <FlatList
+              data={ingredientList}
+              keyExtractor={(item, index) => (item.id || index).toString()}
+              renderItem={renderItem}
+              contentContainerStyle={styles.listContainer}
+            />
+          ) : (
+            <Text style={styles.notFound}>No ingredients detected</Text>
+          )}
+        </>
       )}
     </View>
   );
@@ -89,6 +107,11 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width * 0.7,
     borderWidth: 1,
     borderColor: '#D1D1D1',
+  },
+  notFound: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 100,
   },
   image: {
     width: 60,
