@@ -1,3 +1,4 @@
+import { SimplifiedIngredient } from "@/Store/reducers";
 import { API } from "../base";
 
 export interface User {
@@ -5,8 +6,13 @@ export interface User {
   name: string;
   email: string;
   isVegan: boolean;
-  allergies: number[];
+  allergies: SimplifiedIngredient[];
   favorites: number[];
+}
+
+export interface UserUpdate {
+  allergies?: number[];
+  isVegan?: boolean;
 }
 
 const userApi = API.injectEndpoints({
@@ -17,8 +23,16 @@ const userApi = API.injectEndpoints({
         method: "GET",
       }),
     }),
+
+    updateProfile: build.mutation<User, UserUpdate>({
+      query: (body) => ({
+        url: "users/profile",
+        method: "PUT",
+        body,
+      }),
+    }),
   }),
   overrideExisting: true,
 });
 
-export const { useLazyGetProfileQuery } = userApi;
+export const { useLazyGetProfileQuery, useUpdateProfileMutation } = userApi;

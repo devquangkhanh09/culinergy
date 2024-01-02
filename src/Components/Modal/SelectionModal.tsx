@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Button, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import GeneralModal from './GeneralModal';
@@ -14,17 +14,26 @@ interface SelectionModalProps {
   isVisible: boolean;
   title: string;
   options: SelectItem[];
-  storeKey: 'explore';
+  storeCode: 'ingredients-explore' | 'ingredients-allergenic';
   reducer: any;
   onSelectionComplete: () => void;
 }
 
-// TODO: refactor this component to be more reusable
-const SelectionModal: React.FC<SelectionModalProps> = ({ isVisible, title, options, storeKey, reducer, onSelectionComplete }) => {
+const SelectionModal: React.FC<SelectionModalProps> = ({ isVisible, title, options, storeCode, reducer, onSelectionComplete }) => {
   const [search, setSearch] = useState('');
+  const [selectedOptionsId, setSelectedOptionsId] = useState<number[]>([]);
 
-  const selectedOptions = useAppSelector(state => state[storeKey].selectedIngredients);
+  let selectedOptions: SelectItem[] = [];
+  if (storeCode === 'ingredients-explore') {
+    selectedOptions = useAppSelector(state => state.explore.selectedIngredients);
+  } else if (storeCode === 'ingredients-allergenic') {
+    selectedOptions = useAppSelector(state => state.user.profile.allergies);
+  }
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setSelectedOptionsId(selectedOptions.map((option) => option._id));
+  }, [selectedOptions]);
 
   const toggleOption = (option: SelectItem) => {
     dispatch(reducer(option));
@@ -35,7 +44,7 @@ const SelectionModal: React.FC<SelectionModalProps> = ({ isVisible, title, optio
   const renderItem = ({ item }: { item: SelectItem }) => (
     <TouchableOpacity style={styles.selectItem} onPress={() => toggleOption(item)}>
       <Text style={styles.selectItemText}>{item.name}</Text>
-      {selectedOptions.includes(item) && <Icon name='checkmark' size={20} color='#000' />}
+      {selectedOptionsId.includes(item._id) && <Icon name='checkmark' size={20} color='#000' />}
     </TouchableOpacity>
   );
 

@@ -6,16 +6,31 @@ import {
   fetchBaseQuery,
 } from '@reduxjs/toolkit/query/react';
 
-const baseQuery = fetchBaseQuery({
-  baseUrl: Config.API_URL,
-  prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as { user: { token: string } }).user.token;
-    if (token) {
-      headers.set('authorization', `Bearer ${token}`);
+const baseQuery = async (
+  args: string | FetchArgs,
+  api: BaseQueryApi,
+  extraOptions: {}
+) => {
+  const { getState } = api;
+  const token = (getState() as { user: { token: string } }).user.token;
+  if (!token) {
+    if (typeof args === 'string' && !args.startsWith('auth')) {
+      args = 'guest/' + args;
+    } else if (typeof args !== 'string' && !args.url.startsWith('auth')) {
+      args.url = 'guest/' + args.url;
     }
-    return headers;
-  },
-});
+  }
+
+  const headers = new Headers();
+  if (token) {
+    headers.set('authorization', `Bearer ${token}`);
+  }
+
+  return fetchBaseQuery({
+    baseUrl: Config.API_URL,
+    prepareHeaders: () => headers,
+  })(args, api, extraOptions);
+};
 
 const baseQueryWithInterceptor = async (
   args: string | FetchArgs,

@@ -8,15 +8,19 @@ import {
   Pressable,
   Switch,
 } from 'react-native';
-import { useAppDispatch } from '@/Hooks';
+import { useAppDispatch, useAppSelector } from '@/Hooks';
 import { setToken, unsetFirstTime } from '@/Store/reducers';
 import { AuthScreens, MainScreens, RootScreens, SettingScreens } from '..';
 import { useNavigation } from '@react-navigation/native';
+import { useUpdateProfileMutation } from '@/Services';
+import { updateUserProfile } from '@/Store/reducers';
+import { activateUserOnlyModal } from '@/Store/reducers/modal';
 
 export const Settings = () => {
   const navigation = useNavigation<any>();
   const dispatch = useAppDispatch();
-  const [isVegetarian, setIsVegetarian] = useState<boolean>(false);
+  const userProfile = useAppSelector((state) => state.user.profile);
+  const [updateProfile] = useUpdateProfileMutation();
 
   const handleLogOut = () => {
     dispatch(setToken(''));
@@ -29,6 +33,34 @@ export const Settings = () => {
     navigation.navigate(AuthScreens.WELCOME);
   };
 
+  const handleToggleSwitch = () => {
+    if (!userProfile._id) {
+      dispatch(activateUserOnlyModal());
+      return;
+    }
+  
+    dispatch(updateUserProfile({
+      isVegan: !userProfile.isVegan,
+    }));
+  };
+
+  const checkAndNavigate = (screen: SettingScreens) => {
+    if (!userProfile._id) {
+      dispatch(activateUserOnlyModal());
+      return;
+    }
+
+    navigation.navigate(screen);
+  };
+
+  useEffect(() => {
+    if (userProfile._id) {
+      updateProfile({
+        isVegan: userProfile.isVegan,
+      });
+    }
+  }, [userProfile]);
+
   // TODO: remove button to reset
   return (
     <View style={styles.container}>
@@ -38,17 +70,19 @@ export const Settings = () => {
       />
       <View style={{ height: 50, justifyContent: 'center' }}>
         <Text style={{ fontSize: 20, fontWeight: '700' }}>
-          Nobody knows my name
+          {userProfile.name}
         </Text>
       </View>
-      <Text style={{ fontSize: 15 }}>example-culinergy@hcmut.edu.vn</Text>
+      <Text style={{ fontSize: 15 }}>
+        {userProfile.email}
+      </Text>
       <View style={{ width: '100%', marginTop: 44, gap: 15 }}>
         <Pressable
           style={({ pressed }) => [
             styles.button,
             pressed && styles.buttonPressed,
           ]}
-          onPress={() => navigation.navigate(SettingScreens.CHANGE_PASSWORD)}>
+          onPress={() => checkAndNavigate(SettingScreens.CHANGE_PASSWORD)}>
           <Text style={{ fontSize: 15 }}>Change password</Text>
         </Pressable>
         <Pressable
@@ -56,16 +90,14 @@ export const Settings = () => {
             styles.button,
             pressed && styles.buttonPressed,
           ]}
-          onPress={() =>
-            navigation.navigate(SettingScreens.ALLERGENIC_INGREDIENS)
-          }>
+          onPress={() => checkAndNavigate(SettingScreens.ALLERGENIC_INGREDIENS)}>
           <Text style={{ fontSize: 15 }}>List of allergenic ingredients</Text>
         </Pressable>
         <View style={{ ...styles.button, flexDirection: 'row' }}>
           <Text style={{ fontSize: 15 }}>Are you a vegetarian?</Text>
           <Switch
-            value={isVegetarian}
-            onValueChange={() => setIsVegetarian(!isVegetarian)}
+            value={userProfile.isVegan}
+            onValueChange={handleToggleSwitch}
             style={{ transform: [{ scaleX: 0.6 }, { scaleY: 0.6 }] }}
           />
         </View>

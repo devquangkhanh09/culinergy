@@ -8,6 +8,7 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { MainScreens, RootScreens } from "@/Screens";
 import { useAppDispatch } from "@/Hooks";
 import { updateFavorites } from "@/Store/reducers/favorites";
+import { activateUserOnlyModal } from "@/Store/reducers/modal";
 
 var maxWidth = Dimensions.get('window').width;
 
@@ -22,7 +23,10 @@ export const BigRecipeWidget = ({ data }: { data: Recipe }) => {
   }, [data]);
 
   const handleToggleFavorite = async () => {
-    if (recipeData.isFavorite === undefined) return;
+    if (recipeData.isFavorite === undefined) {
+      dispatch(activateUserOnlyModal());
+      return;
+    }
 
     const response = await toggleFavoriteRecipe(recipeData._id);
 
