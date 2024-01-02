@@ -14,6 +14,7 @@ import { AuthScreens, MainScreens, RootScreens, SettingScreens } from '..';
 import { useNavigation } from '@react-navigation/native';
 import { useUpdateProfileMutation } from '@/Services';
 import { updateUserProfile } from '@/Store/reducers';
+import { activateUserOnlyModal } from '@/Store/reducers/modal';
 
 export const Settings = () => {
   const navigation = useNavigation<any>();
@@ -33,9 +34,23 @@ export const Settings = () => {
   };
 
   const handleToggleSwitch = () => {
+    if (!userProfile._id) {
+      dispatch(activateUserOnlyModal());
+      return;
+    }
+  
     dispatch(updateUserProfile({
       isVegan: !userProfile.isVegan,
     }));
+  };
+
+  const checkAndNavigate = (screen: SettingScreens) => {
+    if (!userProfile._id) {
+      dispatch(activateUserOnlyModal());
+      return;
+    }
+
+    navigation.navigate(screen);
   };
 
   useEffect(() => {
@@ -67,7 +82,7 @@ export const Settings = () => {
             styles.button,
             pressed && styles.buttonPressed,
           ]}
-          onPress={() => navigation.navigate(SettingScreens.CHANGE_PASSWORD)}>
+          onPress={() => checkAndNavigate(SettingScreens.CHANGE_PASSWORD)}>
           <Text style={{ fontSize: 15 }}>Change password</Text>
         </Pressable>
         <Pressable
@@ -75,9 +90,7 @@ export const Settings = () => {
             styles.button,
             pressed && styles.buttonPressed,
           ]}
-          onPress={() =>
-            navigation.navigate(SettingScreens.ALLERGENIC_INGREDIENS)
-          }>
+          onPress={() => checkAndNavigate(SettingScreens.ALLERGENIC_INGREDIENS)}>
           <Text style={{ fontSize: 15 }}>List of allergenic ingredients</Text>
         </Pressable>
         <View style={{ ...styles.button, flexDirection: 'row' }}>

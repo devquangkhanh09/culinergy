@@ -18,9 +18,12 @@ export const HomeContainer = ({ navigation }: HomeScreenNavigatorProps) => {
   const [fetchProfile, { data: profileData, isLoading: isLoading }] = useLazyGetProfileQuery();
   const [fetchRecommended, { data: recipesData, isLoading: isLoading2 }] = useLazyGetRecommendedRecipesQuery();
   const favoritesUpdatedIndex = useAppSelector((state) => state.favorites.favoritesUpdatedIndex);
+  const user = useAppSelector((state) => state.user);
 
   useEffect(() => {
-    fetchProfile();
+    if (!user.isGuest) {
+      fetchProfile();
+    }
     fetchRecommended({
       ofTheDay: true,
     });
