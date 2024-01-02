@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const cameraSlice = createSlice({
   name: 'camera',
   initialState: {
-    imageUrl: { base64: null },
+    imageUrl: { base64: 'https://picsum.photos/200/300' },
   },
   reducers: {
     setImage: (state, action) => {

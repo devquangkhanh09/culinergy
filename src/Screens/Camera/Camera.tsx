@@ -77,7 +77,6 @@ export default function CameraScreen({
     if (!result.canceled) {
       setPreviewVisible(true);
       setCapturedImage(result.assets[0]);
-      console.log(result.assets[0]);
     }
   };
 

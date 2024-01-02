@@ -1,17 +1,17 @@
-import { Config } from "@/Config";
-import { BaseQueryApi } from "@reduxjs/toolkit/dist/query/baseQueryTypes";
+import { Config } from '@/Config';
+import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import {
   createApi,
   FetchArgs,
   fetchBaseQuery,
-} from "@reduxjs/toolkit/query/react";
+} from '@reduxjs/toolkit/query/react';
 
-const baseQuery = fetchBaseQuery({ 
+const baseQuery = fetchBaseQuery({
   baseUrl: Config.API_URL,
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as { user: { token: string }}).user.token;
+    const token = (getState() as { user: { token: string } }).user.token;
     if (token) {
-      headers.set("authorization", `Bearer ${token}`);
+      headers.set('authorization', `Bearer ${token}`);
     }
     return headers;
   },
