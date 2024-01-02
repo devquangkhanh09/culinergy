@@ -46,15 +46,8 @@ export const BigRecipeWidget = ({ data }: { data: Recipe }) => {
     <Pressable onPress={navigateToRecipeDetail}>
       <View style={styles.container}>
         <Image source={{ uri: recipeData.imageUrl }} style={{ width: '100%', height: maxWidth * 0.4, borderRadius: 15 }} />
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginLeft: 20,
-            marginRight: 10,
-            height: 40
-          }}>
+
+        <View style={styles.titleRow}>
           <Text style={{ fontSize: 15, fontWeight: '700' }}>{recipeData.name}</Text>
           <Pressable onPress={handleToggleFavorite}>
             <Icon name={recipeData.isFavorite ? 'heart' : 'heart-outline'} size={20} color={recipeData.isFavorite ? '#FF0000' : '#000000'} />
@@ -81,6 +74,15 @@ const styles = StyleSheet.create({
     width: maxWidth * 0.8,
     borderRadius: 15,
     backgroundColor: '#ffffff',
-    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)'
+    boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.25)',
+  },
+  titleRow: {
+    marginTop: 10,
+    marginBottom: 5,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%'
   }
 })

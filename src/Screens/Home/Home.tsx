@@ -13,7 +13,6 @@ export interface IHomeProps {
     profile: User | undefined;
     recipes: Recipe[] | undefined;
   };
-  isLoading: boolean;
 }
 
 // TODO: create a new component (BigIngredientWidget) for the ingredient of the day
@@ -24,21 +23,13 @@ const ingredientData = {
 }
 
 export const Home = (props: IHomeProps) => {
-  const { data, isLoading } = props;
+  const { data } = props;
 
   const user = useAppSelector((state) => state.user);
 
   return (
-    <View style={{ ...styles.container, justifyContent: isLoading ? 'center' : 'flex-start' }}>
+    <View style={styles.container}>
       <StatusBar style="auto" />
-      {isLoading ? (
-        <HStack space={2} justifyContent="center">
-          <Spinner accessibilityLabel="Loading posts" />
-          <Heading color="primary.500" fontSize="md">
-            {i18n.t(LocalizationKey.LOADING)}
-          </Heading>
-        </HStack>
-      ) : (
         <SafeAreaView>
           <View style={{ marginTop: 35, marginBottom: 15, alignItems: 'center' }}>
             <Text style={{ fontSize: 20, fontWeight: '700' }}>{user.isGuest ? 'Welcome to' : `Welcome, ${data.profile?.name}!`}</Text>
@@ -48,7 +39,6 @@ export const Home = (props: IHomeProps) => {
           {data.recipes && <BigRecipeWidget data={data.recipes[0]} />}
           <Text style={{ fontWeight: '700', marginVertical: 15 }}>Ingredient of the day</Text>
         </SafeAreaView>
-      )}
     </View>
   );
 };
@@ -58,6 +48,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f6f6f7",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
+    height: '100%',
   },
 });

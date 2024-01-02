@@ -11,12 +11,15 @@ import {
   Text,
   Pressable,
   Image,
+  ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import { AuthScreens, RootScreens } from '..';
 import { useAppDispatch } from '@/Hooks';
 import { setGuest, setToken } from '@/Store/reducers';
 import { AuthStackParamList } from '@/Navigation/AuthNavigation/AuthNavigation';
 import { useRegisterMutation } from '@/Services/auth';
+import { Colors } from '@/Theme/Variables';
 
 type RegisterScreenNavigatorProps = NativeStackScreenProps<
   AuthStackParamList,
@@ -29,7 +32,6 @@ export const Register = ({ navigation }: RegisterScreenNavigatorProps) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  // TODO: show error message and loading indicator
   const [register, { data, error, isLoading }] = useRegisterMutation();
 
   const dispatch = useAppDispatch();
@@ -52,6 +54,7 @@ export const Register = ({ navigation }: RegisterScreenNavigatorProps) => {
 
   return (
     <SafeAreaView>
+    <ScrollView>
       <ImageBackground
         source={require('../../../assets/authentication/background-authentication.png')}
         resizeMode="cover"
@@ -68,6 +71,11 @@ export const Register = ({ navigation }: RegisterScreenNavigatorProps) => {
               Culinergy
             </Text>
           </View>
+          {error && (
+            <Text style={styles.error}>
+              Cannot register. Please try again.
+            </Text>
+          )}
           <View style={{ height: 40, marginBottom: 20, marginTop: -15 }}></View>
           <TextInput
             style={styles.text}
@@ -96,13 +104,21 @@ export const Register = ({ navigation }: RegisterScreenNavigatorProps) => {
             onChangeText={setConfirmPassword}
           />
           <View style={{ alignItems: 'center' }}>
-            <Pressable
-              style={{ ...styles.button, backgroundColor: '#0E1E22' }}
-              onPress={handleRegister}>
-              <Text
-                style={{ color: '#ffffff', fontSize: 15, fontWeight: '600' }}>
-                Sign up
-              </Text>
+          <Pressable
+              style={[ styles.button ]}
+              onPress={handleRegister}
+              disabled={isLoading}
+            >
+              {isLoading? (
+                <ActivityIndicator
+                  size="small"
+                  color={Colors.WHITE}
+              />) : (
+                <Text
+                  style={{ color: '#ffffff', fontSize: 15, fontWeight: '600' }}>
+                  Sign up
+                </Text>
+              )}
             </Pressable>
           </View>
           <View
@@ -150,6 +166,7 @@ export const Register = ({ navigation }: RegisterScreenNavigatorProps) => {
           </View>
         </View>
       </ImageBackground>
+    </ScrollView>
     </SafeAreaView>
   );
 };
@@ -163,11 +180,22 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    backgroundColor: '#57B97D',
+    backgroundColor: Colors.PRIMARY,
     width: 250,
     height: 46,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 23,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  error: {
+    color: '#FF0000',
+    fontSize: 15,
+    fontWeight: '600',
+    textAlign: 'center',
   },
 });
