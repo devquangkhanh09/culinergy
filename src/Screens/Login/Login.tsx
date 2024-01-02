@@ -11,12 +11,14 @@ import {
   Pressable,
   Image,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import { AuthScreens, RootScreens } from '..';
 import { useAppDispatch, useAppSelector } from '@/Hooks';
 import { setFirstTime, setGuest, setToken } from '@/Store/reducers';
 import { AuthStackParamList } from '@/Navigation/AuthNavigation/AuthNavigation';
 import { useLoginMutation } from '@/Services/auth';
+import { Colors } from '@/Theme/Variables';
 
 type LoginScreenNavigatorProps = NativeStackScreenProps<
   AuthStackParamList,
@@ -27,7 +29,6 @@ export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
   const user = useAppSelector((state) => state.user);
   const isFirstTime = useAppSelector((state) => state.firstTime.isFirstTime);
 
-  // TODO: show error message and loading indicator
   const [login, { data, error, isLoading }] = useLoginMutation();
 
   useEffect(() => {
@@ -80,6 +81,11 @@ export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
               Culinergy
             </Text>
           </View>
+          {error && (
+            <Text style={styles.error}>
+              Cannot login. Please try again.
+            </Text>
+          )}
           <View style={{ height: 40, marginBottom: 20, marginTop: -15 }}></View>
           <TextInput
             style={{
@@ -120,12 +126,20 @@ export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
           </View>
           <View style={{ alignItems: 'center' }}>
             <Pressable
-              style={{ ...styles.button, backgroundColor: '#0E1E22' }}
-              onPress={handleLogin}>
-              <Text
-                style={{ color: '#ffffff', fontSize: 15, fontWeight: '600' }}>
-                Log in
-              </Text>
+              style={[ styles.button ]}
+              onPress={handleLogin}
+              disabled={isLoading}
+            >
+              {isLoading? (
+                <ActivityIndicator
+                  size="small"
+                  color={Colors.WHITE}
+              />) : (
+                <Text
+                  style={{ color: '#ffffff', fontSize: 15, fontWeight: '600' }}>
+                  Log in
+                </Text>
+              )}
             </Pressable>
           </View>
           <View
@@ -185,5 +199,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 23,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  error: {
+    color: '#FF0000',
+    fontSize: 15,
+    fontWeight: '600',
+    textAlign: 'center',
   },
 });

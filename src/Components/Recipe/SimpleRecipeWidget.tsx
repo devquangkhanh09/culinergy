@@ -23,7 +23,9 @@ const SimpleRecipeWidget: React.FC<SimpleRecipeWidgetProps> = ({ data }) => {
     <View style={styles.container}>
       <Pressable onPress={navigateToRecipeDetail}>
         <Image source={{ uri: data.imageUrl }} style={styles.image} />
-        <Text style={styles.name}>{data.name}</Text>
+        <Text style={styles.name}>
+          {data.name.length > 25 ? data.name.substring(0, 25) + '...' : data.name}
+        </Text>
       </Pressable>
     </View>
   )
@@ -33,6 +35,7 @@ const styles = StyleSheet.create({
   container: {
     width: '45%',
     height: 200,
+    paddingBottom: 10,
     backgroundColor: '#fff',
     borderRadius: 10,
     marginRight: 10,

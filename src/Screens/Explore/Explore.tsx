@@ -12,6 +12,7 @@ import { Colors } from '@/Theme/Variables';
 import { useLazyGetIngredientsQuery } from '@/Services/ingredients';
 import { Recipe, useLazySearchRecipesQuery } from '@/Services/recipes';
 import CustomButton from '@/Components/Button/Button';
+import { LoadingIndicator } from '@/Components/Indicator/LoadingIndicator';
 
 type ExploreScreenNavigatorProps = {
   navigation: {
@@ -26,9 +27,9 @@ export const Explore = ({
   const [page, setPage] = useState(1);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [searchText, setSearchText] = useState('');
-  // TODO: show loading indicator
-  const [fetchIngredients, { data: ingredientsData }] = useLazyGetIngredientsQuery();
-  const [fetchRecipes, { data: recipesData }] = useLazySearchRecipesQuery();
+  const [isLoading, setIsLoading] = useState(false);
+  const [fetchIngredients, { data: ingredientsData, isLoading: isLoading1 }] = useLazyGetIngredientsQuery();
+  const [fetchRecipes, { data: recipesData, isLoading: isLoading2 }] = useLazySearchRecipesQuery();
   const selectedIngredients = useAppSelector(state => state.explore.selectedIngredients);
   const dispatch = useAppDispatch();
 
@@ -41,6 +42,7 @@ export const Explore = ({
 
     setRecipes([]);
     setPage(1);
+    setIsLoading(true);
     fetchRecipes({
       ingredients: selectedIngredients.map((ingredient) => ingredient._id),
       name: searchText,
@@ -49,6 +51,7 @@ export const Explore = ({
   }, [selectedIngredients]);
 
   useEffect(() => {
+    setIsLoading(false);
     // append new recipes to the existing list
     if (recipesData) {
       setRecipes([...recipes, ...recipesData]);
@@ -62,12 +65,15 @@ export const Explore = ({
       name: searchText,
       page: page + 1,
     });
+    setIsLoading(true);
     setPage(page + 1);
   };
 
   const handleSelectionComplete = () => {
     setIsIngredientModalVisible(false);
     setRecipes([]);
+    setPage(1);
+    setIsLoading(true);
     fetchRecipes({
       ingredients: selectedIngredients.map((ingredient) => ingredient._id),
       name: searchText,
@@ -77,6 +83,8 @@ export const Explore = ({
   const handleSearchChange = (text: string) => {
     setSearchText(text);
     setRecipes([]);
+    setPage(1);
+    setIsLoading(true);
     fetchRecipes({
       ingredients: selectedIngredients.map((ingredient) => ingredient._id),
       name: text,
@@ -118,21 +126,27 @@ export const Explore = ({
         </View>
 
         <Text style={styles.subheader}>Recipes</Text>
-        <View style={styles.recipesContainer}>
-          {recipes.map((recipe) => (
-            <SimpleRecipeWidget
-              key={recipe._id}
-              data={recipe}
-            />
-          ))}
-        </View>
 
-        {recipes.length > 0 && (
-          <CustomButton
-            title='Load more'
-            onPress={handleLoadMore}
-            style={{ marginTop: 20 }}
-          />
+        {(isLoading1 || isLoading2) ? <LoadingIndicator /> : (
+          <View>
+            <View style={styles.recipesContainer}>
+              {recipes.map((recipe) => (
+                <SimpleRecipeWidget
+                  key={recipe._id}
+                  data={recipe}
+                />
+              ))}
+            </View>
+
+            {recipes.length > 0 && (
+              <CustomButton
+                title='Load more'
+                onPress={handleLoadMore}
+                style={{ marginTop: 20 }}
+                isLoading={isLoading}
+              />
+            )}
+          </View>
         )}
       </View>
     </ScrollView>

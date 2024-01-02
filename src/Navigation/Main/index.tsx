@@ -46,7 +46,7 @@ export const MainNavigator = () => {
         name={MainScreens.RECIPE_DETAIL} 
         getComponent={() => require('@/Screens/RecipeDetail/RecipeDetail').default} 
         options={{ 
-          title: MainScreens.INGREDIENT_DETAIL,
+          title: MainScreens.RECIPE_DETAIL,
           headerLeft: () => <CustomHeaderBackButton />,
           headerTitleAlign: 'center',
           headerStyle: {

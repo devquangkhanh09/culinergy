@@ -2,9 +2,10 @@ import { Home } from './Home';
 import React, { useEffect } from 'react';
 import { useLazyGetProfileQuery } from '@/Services';
 import { useLazyGetRecommendedRecipesQuery } from '@/Services/recipes';
-import { ScrollView } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { MainScreens } from '..';
 import { useAppSelector } from '@/Hooks';
+import { LoadingIndicator } from '@/Components/Indicator/LoadingIndicator';
 
 type HomeScreenNavigatorProps = {
   navigation: {
@@ -31,11 +32,26 @@ export const HomeContainer = ({ navigation }: HomeScreenNavigatorProps) => {
   }, [favoritesUpdatedIndex]);
 
   return (
-    <ScrollView>
-      <Home data={{
-        profile: profileData,
-        recipes: recipesData,
-      }} isLoading={isLoading && isLoading2} />
-    </ScrollView>
+    <View style={styles.container}>
+      {isLoading || isLoading2 ? <LoadingIndicator /> : (
+        <ScrollView>
+          <Home data={{
+            profile: profileData,
+            recipes: recipesData,
+          }}
+          />
+        </ScrollView>
+      )}
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#f6f6f7",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    height: '100%',
+  },
+});

@@ -13,15 +13,17 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { CameraScreens } from '..';
+import { CameraScreens, MainScreens } from '..';
 import { Recipe, useLazyGetRecipeQuery } from '@/Services/recipes';
 import { useToggleFavoriteRecipeMutation } from '@/Services/recipes';
 import { useAppDispatch } from '@/Hooks';
 import { updateFavorites } from '@/Store/reducers/favorites';
+import { LoadingIndicator } from '@/Components/Indicator/LoadingIndicator';
+import { MainNavigatorProps } from '@/Navigation/Main';
 
 type RecipeDetailScreenNavigationProp = NativeStackScreenProps<
-  CameraStackParamList,
-  CameraScreens.RECIPE_DETAIL
+  MainNavigatorProps,
+  MainScreens.RECIPE_DETAIL
 >;
 
 export default function RecipeDetail ({ route }: RecipeDetailScreenNavigationProp) {
@@ -62,7 +64,7 @@ export default function RecipeDetail ({ route }: RecipeDetailScreenNavigationPro
   };
 
   return (
-    (recipeData &&
+    (isLoading || !recipeData) ? <LoadingIndicator /> : (
     <ScrollView style={styles.container}>
       <View style={styles.imageContainer}>
         <Image
@@ -163,6 +165,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginVertical: 20,
+    width: Dimensions.get('window').width * 0.85,
+    textAlign: 'center',
   },
   content: {
     flexDirection: 'row',
