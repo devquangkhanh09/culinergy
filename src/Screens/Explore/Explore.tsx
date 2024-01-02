@@ -27,9 +27,9 @@ export const Explore = ({
   const [page, setPage] = useState(1);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [searchText, setSearchText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [fetchIngredients, { data: ingredientsData, isLoading: isLoading1 }] = useLazyGetIngredientsQuery();
-  const [fetchRecipes, { data: recipesData, isLoading: isLoading2 }] = useLazySearchRecipesQuery();
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [fetchIngredients, { data: ingredientsData, isFetching: isFetching1 }] = useLazyGetIngredientsQuery();
+  const [fetchRecipes, { data: recipesData, isFetching: isFetching2 }] = useLazySearchRecipesQuery();
   const selectedIngredients = useAppSelector(state => state.explore.selectedIngredients);
   const dispatch = useAppDispatch();
 
@@ -42,7 +42,6 @@ export const Explore = ({
 
     setRecipes([]);
     setPage(1);
-    setIsLoading(true);
     fetchRecipes({
       ingredients: selectedIngredients.map((ingredient) => ingredient._id),
       name: searchText,
@@ -51,12 +50,16 @@ export const Explore = ({
   }, [selectedIngredients]);
 
   useEffect(() => {
-    setIsLoading(false);
     // append new recipes to the existing list
-    if (recipesData) {
+    if (recipesData && recipesData.length > 0 && !isFetching2) {
       setRecipes([...recipes, ...recipesData]);
     }
-  }, [recipesData]);
+    if (isFetching2) {
+      setIsLoadingMore(true);
+    } else {
+      setIsLoadingMore(false);
+    }
+  }, [recipesData, isFetching2]);
 
   // TODO: handle end of list (no more recipes)
   const handleLoadMore = () => {
@@ -65,7 +68,7 @@ export const Explore = ({
       name: searchText,
       page: page + 1,
     });
-    setIsLoading(true);
+    setIsLoadingMore(true);
     setPage(page + 1);
   };
 
@@ -73,7 +76,6 @@ export const Explore = ({
     setIsIngredientModalVisible(false);
     setRecipes([]);
     setPage(1);
-    setIsLoading(true);
     fetchRecipes({
       ingredients: selectedIngredients.map((ingredient) => ingredient._id),
       name: searchText,
@@ -84,7 +86,6 @@ export const Explore = ({
     setSearchText(text);
     setRecipes([]);
     setPage(1);
-    setIsLoading(true);
     fetchRecipes({
       ingredients: selectedIngredients.map((ingredient) => ingredient._id),
       name: text,
@@ -104,7 +105,7 @@ export const Explore = ({
           isVisible={isIngredientModalVisible}
           title='Select ingredients'
           options={ingredientsData? ingredientsData : []}
-          storeKey='explore'
+          storeCode='ingredients-explore'
           reducer={toggleIngredient}
           onSelectionComplete={handleSelectionComplete}
         />
@@ -127,7 +128,7 @@ export const Explore = ({
 
         <Text style={styles.subheader}>Recipes</Text>
 
-        {(isLoading1 || isLoading2) ? <LoadingIndicator /> : (
+        {(isFetching1 || (isFetching2 && !isLoadingMore)) ? <LoadingIndicator /> : (
           <View>
             <View style={styles.recipesContainer}>
               {recipes.map((recipe) => (
@@ -143,7 +144,7 @@ export const Explore = ({
                 title='Load more'
                 onPress={handleLoadMore}
                 style={{ marginTop: 20 }}
-                isLoading={isLoading}
+                isLoading={isLoadingMore}
               />
             )}
           </View>
