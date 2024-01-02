@@ -1,7 +1,22 @@
-import { View, Text, ImageBackground, TouchableOpacity } from 'react-native';
-import React from 'react';
+import { View, Text, TouchableOpacity, Image, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
 
 const CameraPreview = ({ photo, retakePicture, savePhoto, isDisable }: any) => {
+  const [imageHeight, setImageHeight] = useState(300);
+  const screenHeight = Dimensions.get('window').height;
+  const isFullScreen = imageHeight >= screenHeight;
+
+  useEffect(() => {
+    if (photo && photo.base64) {
+      Image.getSize(
+        `data:image/jpeg;base64,${photo.base64}`,
+        (width, height) => {
+          setImageHeight(height);
+        }
+      );
+    }
+  }, [photo]);
+
   return (
     <View
       style={{
@@ -9,62 +24,64 @@ const CameraPreview = ({ photo, retakePicture, savePhoto, isDisable }: any) => {
         flex: 1,
         width: '100%',
         height: '100%',
-        padding: 0,
+        marginTop: 200,
       }}>
-      <ImageBackground
-        source={{ uri: photo && photo.uri }}
+      <Image
+        source={{ uri: `data:image/jpeg;base64,${photo && photo.base64}` }}
         style={{
           flex: 1,
+          height: !isFullScreen ? imageHeight : undefined,
+        }}
+        resizeMode="cover"
+      />
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'column',
+          padding: 15,
+          justifyContent: 'flex-end',
         }}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            padding: 15,
-            justifyContent: 'flex-end',
-          }}>
-          {!isDisable && (
-            <View
+        {!isDisable && (
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <TouchableOpacity
+              onPress={retakePicture}
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                padding: 10,
+                backgroundColor: 'red',
+                borderRadius: 10,
+                alignItems: 'center',
               }}>
-              <TouchableOpacity
-                onPress={retakePicture}
+              <Text
                 style={{
-                  padding: 10,
-                  backgroundColor: 'red',
-                  borderRadius: 10,
-                  alignItems: 'center',
+                  color: '#fff',
+                  fontSize: 20,
                 }}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontSize: 20,
-                  }}>
-                  Re-take
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={savePhoto}
+                Re-take
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={savePhoto}
+              style={{
+                padding: 10,
+                backgroundColor: '#57B97D',
+                borderRadius: 10,
+                alignItems: 'center',
+              }}>
+              <Text
                 style={{
-                  padding: 10,
-                  backgroundColor: '#57B97D',
-                  borderRadius: 10,
-                  alignItems: 'center',
+                  color: '#fff',
+                  fontSize: 20,
                 }}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontSize: 20,
-                  }}>
-                  Save photo
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
-      </ImageBackground>
+                Save photo
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
     </View>
   );
 };

@@ -1,64 +1,79 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Image, StyleSheet, Dimensions, Text } from 'react-native';
 import { useAppSelector } from '@/Hooks';
 
 import CustomButton from '@/Components/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import { CameraScreens } from '..';
-import IngredientsList from './IngredientsList/IngredientsList';
+
+import axios from 'axios';
+import { useLazyGetIngredientQuery } from '@/Services/ingredients';
+import IngredientsList, {
+  IngredientProps,
+} from './IngredientsList/IngredientsList';
 
 export default function ScannerScreen() {
   const camera = useAppSelector((state) => state.camera);
   const screenHeight = Dimensions.get('window').height;
   const targetHeight = screenHeight * 0.4;
-  const imageUrl = camera.imageUrl.uri;
+  const imageUrl = camera.imageUrl.base64;
   const navigator = useNavigation<any>();
 
-  const ingredients = [
-    {
-      id: 1,
-      name: 'Chicken',
-      image: 'https://picsum.photos/200/300',
-    },
-    {
-      id: 2,
-      name: 'Onion',
-      image: 'https://picsum.photos/200/300',
-    },
-    {
-      id: 3,
-      name: 'Grape',
-      image: 'https://picsum.photos/200/300',
-    },
-    {
-      id: 4,
-      name: 'Cheenen',
-      image: 'https://picsum.photos/200/300',
-    },
-    {
-      id: 5,
-      name: 'Mustard',
-      image: 'https://picsum.photos/200/300',
-    },
-    {
-      id: 6,
-      name: 'Mayonaise',
-      image: 'https://picsum.photos/200/300',
-    },
-  ];
+  const [getIngredientByID] = useLazyGetIngredientQuery();
+  const [ingredientList, setIngredientList] = useState<IngredientProps[]>([]);
+
+  useEffect(() => {
+    if (!camera.imageUrl.base64) return;
+
+    const preProcessingList = async (ingredientList: any) => {
+      const newArray = [];
+
+      for (const obj of ingredientList) {
+        const ingredientName = await getIngredientByID(obj.ingredient_id);
+        newArray.push({
+          ...obj,
+          name: ingredientName.data?.name,
+        });
+      }
+
+      return newArray;
+    };
+
+    const sendImageToScanner = async () => {
+      try {
+        const response = await axios.post(
+          'https://culinergy-ai.hungnhb.dev/detect',
+          {
+            image: camera.imageUrl.base64,
+          }
+        );
+        const newData = await preProcessingList(response.data);
+        setIngredientList(newData);
+        console.log('Scanner Data:', newData);
+      } catch (error) {
+        console.error('Scanner Error:', error);
+      }
+    };
+
+    sendImageToScanner();
+  }, [camera]);
 
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: imageUrl }}
+        source={{ uri: `data:image/jpeg;base64,${imageUrl}` }}
         style={{ width: '100%', height: targetHeight }}
         resizeMode="cover"
       />
+
       <View style={styles.ingredientsList}>
         <View style={styles.ingredientsBlock}>
           <Text style={styles.ingredientsText}>Detected Ingredients</Text>
         </View>
-        <IngredientsList dataSource={ingredients} />
+        <IngredientsList
+          originalImage={imageUrl && imageUrl}
+          ingredientList={ingredientList}
+        />
       </View>
       <CustomButton
         title="See Recipes"
@@ -74,17 +89,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
   ingredientsBlock: {
     width: '100%',
     alignItems: 'center',
     borderBottomWidth: 2,
     borderBottomColor: '#CBCBCB',
   },
-
   ingredientsText: {
     fontSize: 20,
     fontWeight: 'bold',

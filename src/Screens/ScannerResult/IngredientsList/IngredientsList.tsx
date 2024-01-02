@@ -1,5 +1,3 @@
-import { CameraScreens } from '@/Screens';
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
   View,
@@ -9,31 +7,42 @@ import {
   StyleSheet,
   Dimensions,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native';
+import { MainScreens } from '@/Screens';
 
-interface DataSource {
+export interface IngredientProps {
+  box: number[]; // [top, left, bottom, right]
   id: number;
   name: string;
-  image: string;
 }
 
-interface IngredientsProps {
-  dataSource: DataSource[];
+interface IngredientListProps {
+  originalImage: string;
+  ingredientList?: IngredientProps[];
 }
 
-const IngredientsList = ({ dataSource }: IngredientsProps) => {
+const IngredientsList = ({
+  originalImage,
+  ingredientList,
+}: IngredientListProps) => {
   const navigator = useNavigation<any>();
-  const renderItem = ({ item }: { item: DataSource }) => (
+
+  const renderItem = ({ item }: { item: IngredientProps }) => (
     <Pressable
-      onPress={() => navigator.navigate(CameraScreens.INGREDIENT_DETAIL)}
+      onPress={() => navigator.navigate(MainScreens.INGREDIENT_DETAIL)}
       style={({ pressed }) => [
         styles.card,
         {
           backgroundColor: pressed ? '#ddd' : '#fff',
         },
       ]}>
-      <Image source={{ uri: item.image }} style={styles.image} />
+      <Image
+        source={{ uri: 'https://picsum.photos/200/300' }}
+        style={styles.image}
+      />
       <Text style={styles.name}>{item.name}</Text>
       <Icon name="chevron-right" size={20} color="gray" style={styles.icon} />
     </Pressable>
@@ -41,12 +50,20 @@ const IngredientsList = ({ dataSource }: IngredientsProps) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={dataSource}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-        contentContainerStyle={styles.listContainer}
-      />
+      {ingredientList && ingredientList.length > 0 ? (
+        <FlatList
+          data={ingredientList}
+          keyExtractor={(item, index) => (item.id || index).toString()}
+          renderItem={renderItem}
+          contentContainerStyle={styles.listContainer}
+        />
+      ) : (
+        <ActivityIndicator
+          style={styles.loadingIndicator}
+          size="large"
+          color="#000"
+        />
+      )}
     </View>
   );
 };
@@ -88,6 +105,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 10,
+  },
+  loadingIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

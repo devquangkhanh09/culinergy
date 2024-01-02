@@ -1,14 +1,18 @@
-import { Config } from "@/Config";
-import { BaseQueryApi } from "@reduxjs/toolkit/dist/query/baseQueryTypes";
+import { Config } from '@/Config';
+import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import {
   createApi,
   FetchArgs,
   fetchBaseQuery,
-} from "@reduxjs/toolkit/query/react";
+} from '@reduxjs/toolkit/query/react';
 
-const baseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extraOptions: {}) => {
+const baseQuery = async (
+  args: string | FetchArgs,
+  api: BaseQueryApi,
+  extraOptions: {}
+) => {
   const { getState } = api;
-  const token = (getState() as { user: { token: string }}).user.token;
+  const token = (getState() as { user: { token: string } }).user.token;
   if (!token) {
     if (typeof args === 'string' && !args.startsWith('auth')) {
       args = 'guest/' + args;
@@ -19,7 +23,7 @@ const baseQuery = async (args: string | FetchArgs, api: BaseQueryApi, extraOptio
 
   const headers = new Headers();
   if (token) {
-    headers.set("authorization", `Bearer ${token}`);
+    headers.set('authorization', `Bearer ${token}`);
   }
 
   return fetchBaseQuery({

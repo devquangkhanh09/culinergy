@@ -9,13 +9,15 @@ import {
   Image,
 } from 'react-native';
 import { Camera } from 'expo-camera';
-import * as ImagePicker from 'expo-image-picker'; // Import ImagePicker
+import * as ImagePicker from 'expo-image-picker';
 import CameraPreview from './CameraPreview';
 import { CameraScreens, MainScreens } from '..';
 import { useAppDispatch } from '@/Hooks';
 import { setImage } from '@/Store/reducers/camera';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import EIcon from 'react-native-vector-icons/Entypo';
+import * as ImageManipulator from 'expo-image-manipulator';
+import * as FileSystem from 'expo-file-system';
 
 type CameraScreenNavigatorProps = {
   navigation: {
@@ -49,8 +51,17 @@ export default function CameraScreen({
   const takePicture = async () => {
     if (camera) {
       const photo: any = await camera.takePictureAsync();
+
+      const resizedPhoto = await ImageManipulator.manipulateAsync(photo.uri, [
+        { resize: { width: 600, height: 800 } },
+      ]);
+
+      const base64Image = await FileSystem.readAsStringAsync(resizedPhoto.uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
       setPreviewVisible(true);
-      setCapturedImage(photo);
+      setCapturedImage({ base64: base64Image });
     }
   };
 
@@ -60,6 +71,7 @@ export default function CameraScreen({
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64: true,
     });
 
     if (!result.canceled) {
