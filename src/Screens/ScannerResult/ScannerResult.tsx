@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Image, StyleSheet, Dimensions, Text } from 'react-native';
 import { useAppSelector } from '@/Hooks';
 
@@ -6,13 +6,35 @@ import CustomButton from '@/Components/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import { CameraScreens } from '..';
 import IngredientsList from './IngredientsList/IngredientsList';
+import { useScannerMutation } from '@/Services/camera';
 
 export default function ScannerScreen() {
   const camera = useAppSelector((state) => state.camera);
+  const [scanner, { data, error, isLoading }] = useScannerMutation();
+
   const screenHeight = Dimensions.get('window').height;
   const targetHeight = screenHeight * 0.4;
-  const imageUrl = camera.imageUrl.uri;
+  const imageUrl = camera.imageUrl.base64;
   const navigator = useNavigation<any>();
+
+  useEffect(() => {
+    if (!camera.imageUrl.base64) return;
+    console.log(camera.imageUrl.base64);
+    const sendImageToScanner = async () => {
+      try {
+        const payload = {
+          image: camera.imageUrl.base64,
+        };
+        console.log('Payload', payload);
+        const response = await scanner(payload);
+        console.log('Scanner Response:', response);
+      } catch (error) {
+        console.error('Scanner Error:', error);
+      }
+    };
+
+    sendImageToScanner();
+  }, [scanner, camera]);
 
   const ingredients = [
     {
@@ -50,7 +72,7 @@ export default function ScannerScreen() {
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: imageUrl }}
+        source={{ uri: `data:image/jpeg;base64,${imageUrl}` }}
         style={{ width: '100%', height: targetHeight }}
         resizeMode="cover"
       />

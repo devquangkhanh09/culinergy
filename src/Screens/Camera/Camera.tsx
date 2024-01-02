@@ -9,7 +9,7 @@ import {
   Image,
 } from 'react-native';
 import { Camera } from 'expo-camera';
-import * as ImagePicker from 'expo-image-picker'; // Import ImagePicker
+import * as ImagePicker from 'expo-image-picker';
 import CameraPreview from './CameraPreview';
 import { CameraScreens, MainScreens } from '..';
 import { useAppDispatch } from '@/Hooks';
@@ -48,7 +48,9 @@ export default function CameraScreen({
 
   const takePicture = async () => {
     if (camera) {
-      const photo: any = await camera.takePictureAsync();
+      const photo: any = await camera.takePictureAsync({
+        base64: true,
+      });
       setPreviewVisible(true);
       setCapturedImage(photo);
     }
@@ -60,6 +62,7 @@ export default function CameraScreen({
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64: true,
     });
 
     if (!result.canceled) {

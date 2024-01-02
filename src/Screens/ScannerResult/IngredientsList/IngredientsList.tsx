@@ -1,4 +1,4 @@
-import { CameraScreens } from '@/Screens';
+import { CameraScreens, MainScreens } from '@/Screens';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
@@ -26,7 +26,7 @@ const IngredientsList = ({ dataSource }: IngredientsProps) => {
   const navigator = useNavigation<any>();
   const renderItem = ({ item }: { item: DataSource }) => (
     <Pressable
-      onPress={() => navigator.navigate(CameraScreens.INGREDIENT_DETAIL)}
+      onPress={() => navigator.navigate(MainScreens.INGREDIENT_DETAIL)}
       style={({ pressed }) => [
         styles.card,
         {

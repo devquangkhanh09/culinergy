@@ -1,7 +1,28 @@
-import { View, Text, ImageBackground, TouchableOpacity } from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  ImageBackground,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+} from 'react-native';
+import React, { useEffect, useState } from 'react';
 
 const CameraPreview = ({ photo, retakePicture, savePhoto, isDisable }: any) => {
+  const [imageHeight, setImageHeight] = useState(300);
+  const screenHeight = Dimensions.get('window').height;
+  const isFullScreen = imageHeight >= screenHeight;
+
+  useEffect(() => {
+    if (photo && photo.base64) {
+      Image.getSize(
+        `data:image/jpeg;base64,${photo.base64}`,
+        (width, height) => {
+          setImageHeight(height);
+        }
+      );
+    }
+  }, [photo]);
   return (
     <View
       style={{
@@ -12,9 +33,10 @@ const CameraPreview = ({ photo, retakePicture, savePhoto, isDisable }: any) => {
         padding: 0,
       }}>
       <ImageBackground
-        source={{ uri: photo && photo.uri }}
+        source={{ uri: `data:image/jpeg;base64,${photo && photo.base64}` }}
         style={{
           flex: 1,
+          height: !isFullScreen ? imageHeight : undefined,
         }}>
         <View
           style={{
