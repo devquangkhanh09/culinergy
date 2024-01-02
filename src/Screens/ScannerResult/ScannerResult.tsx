@@ -6,11 +6,10 @@ import CustomButton from '@/Components/Button/Button';
 import { useNavigation } from '@react-navigation/native';
 import { CameraScreens } from '..';
 import IngredientsList from './IngredientsList/IngredientsList';
-import { useScannerMutation } from '@/Services/camera';
+import axios from 'axios';
 
 export default function ScannerScreen() {
   const camera = useAppSelector((state) => state.camera);
-  const [scanner, { data, error, isLoading }] = useScannerMutation();
 
   const screenHeight = Dimensions.get('window').height;
   const targetHeight = screenHeight * 0.4;
@@ -19,22 +18,24 @@ export default function ScannerScreen() {
 
   useEffect(() => {
     if (!camera.imageUrl.base64) return;
-    console.log(camera.imageUrl.base64);
+
     const sendImageToScanner = async () => {
       try {
-        const payload = {
-          image: camera.imageUrl.base64,
-        };
-        console.log('Payload', payload);
-        const response = await scanner(payload);
-        console.log('Scanner Response:', response);
+        const response = await axios.post(
+          'https://culinergy-ai.hungnhb.dev/detect',
+          {
+            image: camera.imageUrl.base64,
+          }
+        );
+
+        console.log('Scanner Response:', response.data);
       } catch (error) {
         console.error('Scanner Error:', error);
       }
     };
 
     sendImageToScanner();
-  }, [scanner, camera]);
+  }, [camera]);
 
   const ingredients = [
     {

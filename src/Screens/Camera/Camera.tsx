@@ -16,6 +16,8 @@ import { useAppDispatch } from '@/Hooks';
 import { setImage } from '@/Store/reducers/camera';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import EIcon from 'react-native-vector-icons/Entypo';
+import * as ImageManipulator from 'expo-image-manipulator';
+import * as FileSystem from 'expo-file-system';
 
 type CameraScreenNavigatorProps = {
   navigation: {
@@ -48,11 +50,18 @@ export default function CameraScreen({
 
   const takePicture = async () => {
     if (camera) {
-      const photo: any = await camera.takePictureAsync({
-        base64: true,
+      const photo: any = await camera.takePictureAsync();
+
+      const resizedPhoto = await ImageManipulator.manipulateAsync(photo.uri, [
+        { resize: { width: 600, height: 800 } },
+      ]);
+
+      const base64Image = await FileSystem.readAsStringAsync(resizedPhoto.uri, {
+        encoding: FileSystem.EncodingType.Base64,
       });
+
       setPreviewVisible(true);
-      setCapturedImage(photo);
+      setCapturedImage({ base64: base64Image });
     }
   };
 
@@ -68,6 +77,7 @@ export default function CameraScreen({
     if (!result.canceled) {
       setPreviewVisible(true);
       setCapturedImage(result.assets[0]);
+      console.log(result.assets[0]);
     }
   };
 
