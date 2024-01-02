@@ -20,6 +20,7 @@ export enum Colors {
   SECONDARY = "#756F6F",
   SUCCESS = "#28a745",
   ERROR = "#dc3545",
+  BUTTON = '#0E1E22'
 }
 
 export enum NavigationColors {

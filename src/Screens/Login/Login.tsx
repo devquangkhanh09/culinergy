@@ -1,6 +1,6 @@
 import { RootStackParamList } from '@/Navigation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   TextInput,
@@ -28,6 +28,7 @@ type LoginScreenNavigatorProps = NativeStackScreenProps<
 export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
   const user = useAppSelector((state) => state.user);
   const isFirstTime = useAppSelector((state) => state.firstTime.isFirstTime);
+  const [isClickedLogin, setIsClickedLogin] = useState(false)
 
   const [login, { data, error, isLoading }] = useLoginMutation();
 
@@ -49,16 +50,19 @@ export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
 
   const handleLogin = () => {
     login({ email, password });
+    setIsClickedLogin(true)
   };
 
   useEffect(() => {
     if (data) {
+      setIsClickedLogin(false)
       dispatch(setToken(data.accessToken));
       navigation.navigate(RootScreens.MAIN);
     }
   }, [data]);
 
   const handleContinueAsGuest = () => {
+    setIsClickedLogin(false)
     dispatch(setGuest());
     navigation.navigate(RootScreens.MAIN);
   };
@@ -81,12 +85,18 @@ export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
               Culinergy
             </Text>
           </View>
-          {error && (
-            <Text style={styles.error}>
-              Cannot login. Please try again.
-            </Text>
-          )}
-          <View style={{ height: 40, marginBottom: 20, marginTop: -15 }}></View>
+          <View style={isClickedLogin && error ? styles.error : { height: 40, marginBottom: 20, marginTop: -15 }}>
+            {isClickedLogin && error &&
+              <>
+                <Text style={{ fontWeight: '700' }}>
+                  Incorrect email or password.
+                </Text>
+                <Text style={{ fontWeight: '700' }}>
+                  Please try again.
+                </Text>
+              </>
+            }
+          </View>
           <TextInput
             style={{
               height: 50,
@@ -95,6 +105,7 @@ export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
               paddingLeft: 25,
               marginBottom: 20,
             }}
+            autoCapitalize='none'
             placeholder="Email"
             value={email}
             onChangeText={setEmail}
@@ -126,15 +137,15 @@ export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
           </View>
           <View style={{ alignItems: 'center' }}>
             <Pressable
-              style={[ styles.button ]}
+              style={{ ...styles.button, backgroundColor: '#0E1E22', }}
               onPress={handleLogin}
               disabled={isLoading}
             >
-              {isLoading? (
+              {isLoading ? (
                 <ActivityIndicator
                   size="small"
                   color={Colors.WHITE}
-              />) : (
+                />) : (
                 <Text
                   style={{ color: '#ffffff', fontSize: 15, fontWeight: '600' }}>
                   Log in
@@ -187,7 +198,7 @@ export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
           </View>
         </View>
       </ImageBackground>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 };
 
@@ -206,9 +217,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   error: {
-    color: '#FF0000',
-    fontSize: 15,
-    fontWeight: '600',
-    textAlign: 'center',
+    boxShadow: '0px 2px 4px 0px rgba(0, 0, 0, 0.25)',
+    backgroundColor: '#ffffff',
+    borderLeftWidth: 4,
+    borderLeftColor: 'red',
+    height: 40,
+    marginBottom: 20,
+    marginTop: -15,
+    paddingLeft: 20,
+    justifyContent: 'center'
   },
 });

@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    backgroundColor: Colors.PRIMARY,
+    backgroundColor: Colors.BUTTON,
     width: 250,
     height: 46,
     alignItems: 'center',
