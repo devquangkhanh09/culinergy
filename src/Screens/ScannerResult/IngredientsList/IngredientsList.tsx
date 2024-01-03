@@ -78,7 +78,7 @@ const IngredientsList = ({ ingredientList }: IngredientListProps) => {
             <FlatList
               data={ingredientList}
               keyExtractor={(item, index) =>
-                (item.ingredient_id || index).toString()
+                index.toString()
               }
               renderItem={renderItem}
               contentContainerStyle={styles.listContainer}
