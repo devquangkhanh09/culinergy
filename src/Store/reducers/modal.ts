@@ -23,8 +23,14 @@ const modalSlice = createSlice({
     },
 
     activateUserOnlyModal: (state) => {
-      state.title = 'User Only';
+      state.title = 'Feature not available';
       state.content = 'Please login to use this feature';
+      state.isOpen = true;
+    },
+
+    activateNoIngredientModal: (state) => {
+      state.title = 'No ingredients';
+      state.content = 'Cannot recommend recipes without ingredients';
       state.isOpen = true;
     },
 
@@ -34,5 +40,5 @@ const modalSlice = createSlice({
   },
 });
 
-export const { setModal, activateUserOnlyModal, closeModal } = modalSlice.actions;
+export const { setModal, activateUserOnlyModal, activateNoIngredientModal, closeModal } = modalSlice.actions;
 export const modalReducers = modalSlice.reducer;
