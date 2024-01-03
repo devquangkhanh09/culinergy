@@ -10,9 +10,8 @@ import React from 'react';
 import Badge from '@/Components/Badge/Badge';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
-import { CameraScreens, MainScreens } from '@/Screens';
+import { CameraScreens, MainScreens, RootScreens } from '@/Screens';
 import { useDispatch } from 'react-redux';
-import { setRecipeByID } from '@/Store/reducers/recipe';
 
 interface RecommendCardProps {
   data: {
@@ -29,8 +28,10 @@ export const RecommendCard = ({ data }: RecommendCardProps) => {
   const navigator = useNavigation<any>();
   const dispatch = useDispatch();
   const handlePress = () => {
-    dispatch(setRecipeByID(data.id));
-    navigator.navigate(MainScreens.RECIPE_DETAIL);
+    navigator.navigate(RootScreens.MAIN, {
+      screen: MainScreens.RECIPE_DETAIL,
+      params: { recipeId: data.id },
+    });
   };
   return (
     <Pressable
