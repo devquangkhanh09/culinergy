@@ -36,7 +36,7 @@ export default function Allergenic() {
     <ScrollView style={styles.container}>
       <View style={{ borderRadius: 15, borderColor: 'rgba(173, 173, 173, 0.50)', borderWidth: 1 }}>
         {allergenicIngredients.map((ingredient, idx) => (
-          <View key={ingredient._id} style={{ height: 50, backgroundColor: idx % 2? '#f2f2f2' : '#ffffff', paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <View key={ingredient._id} style={{ height: 50, backgroundColor: idx % 2 ? '#f2f2f2' : '#ffffff', paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopLeftRadius: idx === 0 ? 15 : 0, borderTopRightRadius: idx === 0 ? 15 : 0 }}>
             <Text>{ingredient.name}</Text>
             <Pressable onPress={() => dispatch(toggleAllergy(ingredient))}>
               <Image
@@ -46,7 +46,18 @@ export default function Allergenic() {
             </Pressable>
           </View>
         ))}
-        <Pressable onPress={() => setIsIngredientModalVisible(true)} style={{ height: 50, backgroundColor: '#ffffff', flexDirection: 'row', alignItems: 'center', borderBottomLeftRadius: 15, borderBottomRightRadius: 15 }}>
+        <Pressable
+          onPress={() => setIsIngredientModalVisible(true)}
+          style={{
+            height: 50,
+            backgroundColor: allergenicIngredients?.length % 2 ? '#f2f2f2' : '#ffffff',
+            flexDirection: 'row',
+            alignItems: 'center',
+            borderRadius: 15,
+            borderTopLeftRadius: allergenicIngredients?.length > 0 ? 0 : 15,
+            borderTopRightRadius: allergenicIngredients?.length > 0 ? 0 : 15
+          }}
+        >
           <Image
             source={require('../../../assets/settings/add-allergenic.png')}
             style={{ height: 20, width: 20, marginLeft: 20, marginRight: 10 }}
