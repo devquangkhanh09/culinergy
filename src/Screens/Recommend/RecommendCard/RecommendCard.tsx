@@ -42,13 +42,20 @@ export const RecommendCard = ({ data }: RecommendCardProps) => {
       <Image source={{ uri: data.imageUrl }} style={styles.image} />
       <View style={styles.textRecommendBlock}>
         <Text style={styles.textRecommendHeader}>{data.title}</Text>
-        <Text style={styles.textRecommendDescription}>{data.subTitle}</Text>
+        <Text style={styles.textRecommendDescription}>
+          {data.subTitle.length > 50 ? data.subTitle.slice(0, 50) + '...' : data.subTitle}
+        </Text>
         <View style={styles.badgeList}>
-          {data.badge.map((item) => (
+          {data.badge.slice(0, 4).map((item) => (
             <View key={item.id} style={styles.badgeItem}>
               <Badge id={item.id} name={item.name} />
             </View>
           ))}
+          {data.badge.length > 4 && (
+            <View style={styles.badgeItem}>
+              <Badge id={-1} name={`+${data.badge.length - 4}`} />
+            </View>
+          )}
         </View>
         <View style={styles.flexBetween}>
           <View style={styles.flexBetween}>
@@ -88,7 +95,7 @@ const styles = StyleSheet.create({
   },
   textRecommendBlock: {
     flexDirection: 'column',
-    width: Dimensions.get('window').width * 0.5,
+    width: '50%',
     paddingVertical: 10,
     paddingHorizontal: 15,
   },

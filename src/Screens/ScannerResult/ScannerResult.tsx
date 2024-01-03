@@ -12,6 +12,7 @@ import IngredientsList, {
   IngredientProps,
 } from './IngredientsList/IngredientsList';
 import { setIngredientListIDs } from '@/Store/reducers/ingredientsList';
+import { activateNoIngredientModal } from '@/Store/reducers/modal';
 
 export default function ScannerScreen() {
   const camera = useAppSelector((state) => state.camera);
@@ -62,6 +63,11 @@ export default function ScannerScreen() {
   }, [camera]);
 
   const handleSelectRecipe = () => {
+    if (ingredientList.length === 0) {
+      dispatch(activateNoIngredientModal());
+      return;
+    }
+
     const ingredientIDs = ingredientList.map(
       (ingredient) => ingredient.ingredient_id
     );
