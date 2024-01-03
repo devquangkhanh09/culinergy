@@ -49,23 +49,23 @@ export const BigRecipeWidget = ({ data }: { data: Recipe }) => {
   return (
     <Pressable onPress={navigateToRecipeDetail}>
       <View style={styles.container}>
-        <Image source={{ uri: recipeData.imageUrl }} style={{ width: '100%', height: maxWidth * 0.4, borderRadius: 15 }} />
+        <Image source={{ uri: recipeData?.imageUrl }} style={{ width: '100%', height: maxWidth * 0.4, borderRadius: 15 }} />
 
         <View style={styles.titleRow}>
-          <Text style={{ fontSize: 15, fontWeight: '700' }}>{recipeData.name}</Text>
+          <Text style={{ fontSize: 15, fontWeight: '700' }}>{recipeData?.name}</Text>
           <Pressable onPress={handleToggleFavorite}>
-            <Icon name={recipeData.isFavorite ? 'heart' : 'heart-outline'} size={20} color={recipeData.isFavorite ? '#FF0000' : '#000000'} />
+            <Icon name={recipeData?.isFavorite ? 'heart' : 'heart-outline'} size={20} color={recipeData?.isFavorite ? '#FF0000' : '#000000'} />
           </Pressable>
         </View>
-        <Text style={{ marginHorizontal: 20 }}>{recipeData.description}</Text>
+        <Text style={{ marginHorizontal: 20 }}>{recipeData?.description}</Text>
         <View style={{ flexDirection: 'row', height: 40, alignItems: 'center' }}>
           <View style={{ flexDirection: 'row', width: '50%', justifyContent: 'center', borderRightWidth: 1 }}>
             <Icon name='time-outline' size={20} color='#000000' style={{ marginRight: 20 }} />
-            <Text style={{ fontWeight: '700' }}>{recipeData.timeToCook}</Text>
+            <Text style={{ fontWeight: '700' }}>{recipeData?.timeToCook}</Text>
           </View>
           <View style={{ flexDirection: 'row', width: '50%', justifyContent: 'center' }}>
             <MCIcon name='chef-hat' size={20} color='#000000' style={{ marginRight: 20 }} />
-            <Text style={{ fontWeight: '700', color: '#57B97D' }}>{recipeData.favoriteCount} cooked</Text>
+            <Text style={{ fontWeight: '700', color: '#57B97D' }}>{recipeData?.favoriteCount} cooked</Text>
           </View>
         </View>
       </View>
