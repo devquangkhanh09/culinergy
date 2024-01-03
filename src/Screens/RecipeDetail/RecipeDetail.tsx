@@ -119,8 +119,8 @@ export default function RecipeDetail({
         <View style={styles.contentList}>
           <Text style={styles.textSubHeader}>Ingredients</Text>
           <View>
-            {recipeData.ingredients.map((ingredient) => (
-              <View key={ingredient._id}>
+            {recipeData.ingredients.map((ingredient, idx) => (
+              <View key={idx}>
                 <Text style={styles.textItem}>{ingredient.name}</Text>
               </View>
             ))}

@@ -26,8 +26,8 @@ export const Favorites = ({
     (data && data.length > 0 &&
       <ScrollView>
         <View style={styles.container}>
-          {data.map((recipe) => (
-            <BigRecipeWidget key={recipe._id} data={recipe} />
+          {data.map((recipe, idx) => (
+            <BigRecipeWidget key={idx} data={recipe} />
           ))}
         </View>
       </ScrollView>

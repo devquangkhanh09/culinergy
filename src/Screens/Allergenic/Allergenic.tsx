@@ -36,7 +36,7 @@ export default function Allergenic() {
     <ScrollView style={styles.container}>
       <View style={{ borderRadius: 15, borderColor: 'rgba(173, 173, 173, 0.50)', borderWidth: 1 }}>
         {allergenicIngredients.map((ingredient, idx) => (
-          <View key={ingredient._id} style={{ height: 50, backgroundColor: idx % 2 ? '#f2f2f2' : '#ffffff', paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopLeftRadius: idx === 0 ? 15 : 0, borderTopRightRadius: idx === 0 ? 15 : 0 }}>
+          <View key={idx} style={{ height: 50, backgroundColor: idx % 2 ? '#f2f2f2' : '#ffffff', paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderTopLeftRadius: idx === 0 ? 15 : 0, borderTopRightRadius: idx === 0 ? 15 : 0 }}>
             <Text>{ingredient.name}</Text>
             <Pressable onPress={() => dispatch(toggleAllergy(ingredient))}>
               <Image
