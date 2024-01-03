@@ -21,6 +21,7 @@ import { updateFavorites } from '@/Store/reducers/favorites';
 import { LoadingIndicator } from '@/Components/Indicator/LoadingIndicator';
 import { MainNavigatorProps } from '@/Navigation/Main';
 import { activateUserOnlyModal } from '@/Store/reducers/modal';
+import { setRecentlyViewedRecipe } from '@/Store/reducers';
 
 type RecipeDetailScreenNavigationProp = NativeStackScreenProps<
   MainNavigatorProps,
@@ -45,6 +46,7 @@ export default function RecipeDetail({
   useEffect(() => {
     if (data) {
       setRecipeData(data);
+      dispatch(setRecentlyViewedRecipe(data));
     }
   }, [data]);
 

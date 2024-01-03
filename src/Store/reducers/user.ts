@@ -1,12 +1,15 @@
 import { User } from "@/Services";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { SimplifiedIngredient } from "./explore";
+import { Recipe } from "@/Services/recipes";
 
 interface UserState {
   isGuest: boolean;
   // WARNING: This is not a secure way to store a token! This setup is for development purposes only.
   token: string;
   profile: User;
+  // TODO: store the last viewed recipe in the database
+  recentlyViewedRecipe: Recipe;
 }
 
 const guestProfile: User = {
@@ -18,10 +21,24 @@ const guestProfile: User = {
   favorites: [],
 };
 
+const emptyRecipe: Recipe = {
+  _id: -1,
+  name: "",
+  description: "",
+  ingredients: [],
+  instructions: [],
+  imageUrl: "",
+  timeToCook: "",
+  favoriteCount: 0,
+  tags: [],
+  isFavorite: false,
+};
+
 const initialState: UserState = {
   isGuest: false,
   token: "",
   profile: guestProfile,
+  recentlyViewedRecipe: emptyRecipe,
 };
 
 const slice = createSlice({
@@ -32,6 +49,7 @@ const slice = createSlice({
       state.isGuest = true;
       state.token = "";
       state.profile = guestProfile;
+      state.recentlyViewedRecipe = emptyRecipe;
     },
     setToken: (state, action) => {
       state.token = action.payload;
@@ -39,6 +57,7 @@ const slice = createSlice({
       if (action.payload === "") {
         state.profile = guestProfile;
       }
+      state.recentlyViewedRecipe = emptyRecipe;
     },
 
     setUserProfile: (state, action: PayloadAction<User>) => {
@@ -56,7 +75,11 @@ const slice = createSlice({
       } else {
         state.profile.allergies.splice(index, 1);
       }
-    }
+    },
+
+    setRecentlyViewedRecipe: (state, action: PayloadAction<Recipe>) => {
+      state.recentlyViewedRecipe = action.payload;
+    },
   },
 });
 
@@ -66,5 +89,6 @@ export const {
   setUserProfile,
   updateUserProfile,
   toggleAllergy,
+  setRecentlyViewedRecipe,
 } = slice.actions;
 export const userReducers = slice.reducer;

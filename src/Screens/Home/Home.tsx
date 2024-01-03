@@ -1,12 +1,13 @@
 import { i18n, LocalizationKey } from "@/Localization";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { HStack, Spinner, Heading } from "native-base";
 import { User } from "@/Services";
-import { useAppSelector } from "@/Hooks";
+import { useAppSelector, useAppDispatch } from "@/Hooks";
 import { BigRecipeWidget } from "@/Components/Recipe/BigRecipeWidget";
-import { Recipe } from "@/Services/recipes";
+import { Recipe, useLazyGetRecipeQuery } from "@/Services/recipes";
+import { setRecentlyViewedRecipe } from "@/Store/reducers";
 
 export interface IHomeProps {
   data: {
@@ -15,18 +16,26 @@ export interface IHomeProps {
   };
 }
 
-// TODO: create a new component (BigIngredientWidget) for the ingredient of the day
-const ingredientData = {
-  img: require('../../../assets/recipe/recipe-2.png'),
-  name: 'Tomato Pasta',
-  isLike: true,
-}
-
 export const Home = (props: IHomeProps) => {
   const { data } = props;
 
+  const dispatch = useAppDispatch();
+
   const user = useAppSelector((state) => state.user);
-  // TODO: add something below recipe of the day
+  const [fetchRecipe, { data: recipeData, isLoading }] = useLazyGetRecipeQuery();
+  const favoritesUpdatedIndex = useAppSelector((state) => state.favorites.favoritesUpdatedIndex);
+  
+  useEffect(() => {
+    if (user.recentlyViewedRecipe._id !== -1) {
+      fetchRecipe(user.recentlyViewedRecipe._id);
+    }
+  }, [favoritesUpdatedIndex]);
+
+  useEffect(() => {
+    if (recipeData) {
+      dispatch(setRecentlyViewedRecipe(recipeData));
+    }
+  }, [recipeData]);
 
   return (
     <View style={styles.container}>
@@ -38,6 +47,8 @@ export const Home = (props: IHomeProps) => {
           </View>
           <Text style={{ fontWeight: '700', marginBottom: 15 }}>Recipe of the day</Text>
           {data.recipes && <BigRecipeWidget data={data.recipes[0]} />}
+          <Text style={{ fontWeight: '700', marginBottom: 15, marginTop: 15 }}>Recently viewed</Text>
+          {user.recentlyViewedRecipe._id !== -1 && <BigRecipeWidget data={user.recentlyViewedRecipe} />}
         </SafeAreaView>
     </View>
   );
