@@ -54,8 +54,8 @@ export default function CameraScreen({
     if (camera) {
       const photo = await camera.takePictureAsync();
 
-      const minWidth = 800;
-      const maxWidth = 1000;
+      const minWidth = 600;
+      const maxWidth = 800;
 
       let newWidth = Math.min(Math.max(photo.width, minWidth), maxWidth);
       let newHeight = newWidth;
