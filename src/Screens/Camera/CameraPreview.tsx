@@ -31,6 +31,7 @@ const CameraPreview = ({ photo, retakePicture, savePhoto, isDisable }: any) => {
         style={{
           flex: 1,
           height: !isFullScreen ? imageHeight : undefined,
+          alignItems: 'center',
         }}
         resizeMode="cover"
       />

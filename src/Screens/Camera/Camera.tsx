@@ -52,10 +52,16 @@ export default function CameraScreen({
 
   const takePicture = async () => {
     if (camera) {
-      const photo: any = await camera.takePictureAsync();
+      const photo = await camera.takePictureAsync();
+
+      const minWidth = 800;
+      const maxWidth = 1000;
+
+      let newWidth = Math.min(Math.max(photo.width, minWidth), maxWidth);
+      let newHeight = newWidth;
 
       const resizedPhoto = await ImageManipulator.manipulateAsync(photo.uri, [
-        { resize: { width: maxWidth, height: maxWidth } },
+        { resize: { width: newWidth, height: newHeight } },
       ]);
 
       const base64Image = await FileSystem.readAsStringAsync(resizedPhoto.uri, {
