@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert,
   Image,
+  Dimensions,
 } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
@@ -33,6 +34,7 @@ export default function CameraScreen({
   const [previewVisible, setPreviewVisible] = React.useState(false);
   const [capturedImage, setCapturedImage] = React.useState<any>(null);
   const [cameraType, setCameraType] = React.useState<any>('back');
+  const maxWidth = Dimensions.get('window').width;
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -53,7 +55,7 @@ export default function CameraScreen({
       const photo: any = await camera.takePictureAsync();
 
       const resizedPhoto = await ImageManipulator.manipulateAsync(photo.uri, [
-        { resize: { width: 600, height: 600 } },
+        { resize: { width: maxWidth, height: maxWidth } },
       ]);
 
       const base64Image = await FileSystem.readAsStringAsync(resizedPhoto.uri, {

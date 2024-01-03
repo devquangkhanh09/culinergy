@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 const CameraPreview = ({ photo, retakePicture, savePhoto, isDisable }: any) => {
   const [imageHeight, setImageHeight] = useState(300);
+  const maxWidth = Dimensions.get('window').width;
   const screenHeight = Dimensions.get('window').height;
   const isFullScreen = imageHeight >= screenHeight;
 
@@ -22,9 +23,8 @@ const CameraPreview = ({ photo, retakePicture, savePhoto, isDisable }: any) => {
       style={{
         backgroundColor: 'transparent',
         flex: 1,
-        width: '100%',
-        height: '100%',
-        marginTop: 200,
+        width: maxWidth,
+        height: maxWidth,
       }}>
       <Image
         source={{ uri: `data:image/jpeg;base64,${photo && photo.base64}` }}
