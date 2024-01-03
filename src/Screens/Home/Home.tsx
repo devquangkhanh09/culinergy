@@ -24,7 +24,7 @@ export const Home = (props: IHomeProps) => {
   const user = useAppSelector((state) => state.user);
   const [fetchRecipe, { data: recipeData, isLoading }] = useLazyGetRecipeQuery();
   const favoritesUpdatedIndex = useAppSelector((state) => state.favorites.favoritesUpdatedIndex);
-  
+
   useEffect(() => {
     if (user.recentlyViewedRecipe?._id !== -1) {
       fetchRecipe(user.recentlyViewedRecipe?._id);
@@ -40,16 +40,20 @@ export const Home = (props: IHomeProps) => {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-        <SafeAreaView>
-          <View style={{ marginTop: 35, marginBottom: 15, alignItems: 'center' }}>
-            <Text style={{ fontSize: 20, fontWeight: '700' }}>{user.isGuest ? 'Welcome to' : `Welcome, ${data.profile?.name}!`}</Text>
-            {user.isGuest && <Text style={{ fontSize: 20, fontWeight: '700', color: '#57B97D' }}>Culinergy</Text>}
-          </View>
-          <Text style={{ fontWeight: '700', marginBottom: 15 }}>Recipe of the day</Text>
-          {data.recipes && <BigRecipeWidget data={data.recipes[0]} />}
-          <Text style={{ fontWeight: '700', marginBottom: 15, marginTop: 15 }}>Recently viewed</Text>
-          {user.recentlyViewedRecipe?._id !== -1 && <BigRecipeWidget data={user.recentlyViewedRecipe} />}
-        </SafeAreaView>
+      <SafeAreaView>
+        <View style={{ marginTop: 35, marginBottom: 15, alignItems: 'center' }}>
+          <Text style={{ fontSize: 20, fontWeight: '700' }}>{user.isGuest ? 'Welcome to' : `Welcome, ${data.profile?.name}!`}</Text>
+          {user.isGuest && <Text style={{ fontSize: 20, fontWeight: '700', color: '#57B97D' }}>Culinergy</Text>}
+        </View>
+        <Text style={{ fontWeight: '700', marginBottom: 15 }}>Recipe of the day</Text>
+        {data.recipes && <BigRecipeWidget data={data.recipes[0]} />}
+        {user.recentlyViewedRecipe?._id !== -1 &&
+          <>
+            <Text style={{ fontWeight: '700', marginBottom: 15, marginTop: 15 }}>Recently viewed</Text>
+            <BigRecipeWidget data={user.recentlyViewedRecipe} />
+          </>
+        }
+      </SafeAreaView>
     </View>
   );
 };
