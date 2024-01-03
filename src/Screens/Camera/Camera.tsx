@@ -53,7 +53,7 @@ export default function CameraScreen({
       const photo: any = await camera.takePictureAsync();
 
       const resizedPhoto = await ImageManipulator.manipulateAsync(photo.uri, [
-        { resize: { width: 600, height: 800 } },
+        { resize: { width: 600, height: 600 } },
       ]);
 
       const base64Image = await FileSystem.readAsStringAsync(resizedPhoto.uri, {
@@ -69,7 +69,7 @@ export default function CameraScreen({
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 1,
       base64: true,
     });

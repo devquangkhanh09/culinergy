@@ -26,8 +26,8 @@ export const Home = (props: IHomeProps) => {
   const favoritesUpdatedIndex = useAppSelector((state) => state.favorites.favoritesUpdatedIndex);
   
   useEffect(() => {
-    if (user.recentlyViewedRecipe._id !== -1) {
-      fetchRecipe(user.recentlyViewedRecipe._id);
+    if (user.recentlyViewedRecipe?._id !== -1) {
+      fetchRecipe(user.recentlyViewedRecipe?._id);
     }
   }, [favoritesUpdatedIndex]);
 
@@ -48,7 +48,7 @@ export const Home = (props: IHomeProps) => {
           <Text style={{ fontWeight: '700', marginBottom: 15 }}>Recipe of the day</Text>
           {data.recipes && <BigRecipeWidget data={data.recipes[0]} />}
           <Text style={{ fontWeight: '700', marginBottom: 15, marginTop: 15 }}>Recently viewed</Text>
-          {user.recentlyViewedRecipe._id !== -1 && <BigRecipeWidget data={user.recentlyViewedRecipe} />}
+          {user.recentlyViewedRecipe?._id !== -1 && <BigRecipeWidget data={user.recentlyViewedRecipe} />}
         </SafeAreaView>
     </View>
   );
