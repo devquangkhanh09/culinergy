@@ -26,6 +26,7 @@ export const Home = (props: IHomeProps) => {
   const { data } = props;
 
   const user = useAppSelector((state) => state.user);
+  // TODO: add something below recipe of the day
 
   return (
     <View style={styles.container}>
@@ -37,7 +38,6 @@ export const Home = (props: IHomeProps) => {
           </View>
           <Text style={{ fontWeight: '700', marginBottom: 15 }}>Recipe of the day</Text>
           {data.recipes && <BigRecipeWidget data={data.recipes[0]} />}
-          <Text style={{ fontWeight: '700', marginVertical: 15 }}>Ingredient of the day</Text>
         </SafeAreaView>
     </View>
   );

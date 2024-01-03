@@ -30,15 +30,17 @@ type RecipeDetailScreenNavigationProp = NativeStackScreenProps<
 export default function RecipeDetail({
   route,
 }: RecipeDetailScreenNavigationProp) {
-  const recipe = useAppSelector((state) => state.recipe);
+  const { recipeId } = route.params;
+  const userProfile = useAppSelector((state) => state.user.profile);
   const [fetchOne, { data, isLoading }] = useLazyGetRecipeQuery();
   const [recipeData, setRecipeData] = useState(data);
   const [toggleFavoriteRecipe] = useToggleFavoriteRecipeMutation();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    fetchOne(recipe.recipeID);
-  }, []);
+    fetchOne(recipeId);
+  }, [route.params.recipeId]);
+
 
   useEffect(() => {
     if (data) {
@@ -106,6 +108,37 @@ export default function RecipeDetail({
             <Text style={styles.text}>{recipeData.favoriteCount} cooked</Text>
           </View>
         </View>
+        <View style={styles.notification}>
+
+          {userProfile.isVegan && (
+            (recipeData.tags.includes('Vegan') || recipeData.tags.includes('Vegetarian')) ? (
+              <View style={styles.flexStart}>
+                <Icon name="check" size={30} color='green' />
+                <Text style={styles.notiText}>This recipe is vegan</Text>
+              </View>
+            ) : (
+              <View style={styles.flexStart}>
+                <Icon name="close" size={30} color='red' />
+                <Text style={styles.notiText}>This recipe is not vegan</Text>
+              </View>
+            )
+          )}
+
+          {userProfile.allergies.length > 0 && (
+            (recipeData.ingredients.some((ingredient) => userProfile.allergies.find((allergy) => (allergy._id === ingredient._id)))) ? (
+              <View style={styles.flexStart}>
+                <Icon name="close" size={30} color='red' />
+                <Text style={styles.notiText}>This recipe contains your allergies</Text>
+              </View>
+            ) : (
+              <View style={styles.flexStart}>
+                <Icon name="check" size={30} color='green' />
+                <Text style={styles.notiText}>This recipe does not contain your allergies</Text>
+              </View>
+            )
+          )}
+
+        </View>
         <View style={styles.contentList}>
           <Text style={styles.textSubHeader}>Tags</Text>
           <View style={styles.badgeList}>
@@ -120,8 +153,11 @@ export default function RecipeDetail({
           <Text style={styles.textSubHeader}>Ingredients</Text>
           <View>
             {recipeData.ingredients.map((ingredient) => (
-              <View key={ingredient._id}>
+              <View key={ingredient._id} style={styles.ingredientRow}>
                 <Text style={styles.textItem}>{ingredient.name}</Text>
+                {userProfile.allergies.find((allergy) => (allergy._id === ingredient._id)) && (
+                  <Icon name="exclamation-circle" size={20} color="red" />
+                )}
               </View>
             ))}
           </View>
@@ -220,6 +256,29 @@ const styles = StyleSheet.create({
   textItem: {
     fontSize: 16,
     marginVertical: 5,
+  },
+
+  ingredientRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    gap: 10,
+    alignItems: 'center',
+  },
+  notification: {
+    width: Dimensions.get('window').width * 0.85,
+    paddingVertical: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: '#CBCBCB',
+  },
+  notiText: {
+    fontSize: 16,
+    marginVertical: 5,
+    width: Dimensions.get('window').width * 0.8,
+  },
+  flexStart: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
 });
 function toggleFavoriteRecipe(_id: number) {
