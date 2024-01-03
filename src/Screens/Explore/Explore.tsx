@@ -131,9 +131,9 @@ export const Explore = ({
         {(isFetching1 || (isFetching2 && !isLoadingMore)) ? <LoadingIndicator /> : (
           <View>
             <View style={styles.recipesContainer}>
-              {recipes.map((recipe) => (
+              {recipes.map((recipe, idx) => (
                 <SimpleRecipeWidget
-                  key={recipe._id}
+                  key={idx}
                   data={recipe}
                 />
               ))}

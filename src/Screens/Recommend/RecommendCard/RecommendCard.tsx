@@ -47,8 +47,8 @@ export const RecommendCard = ({ data }: RecommendCardProps) => {
           {data.subTitle.length > 50 ? data.subTitle.slice(0, 50) + '...' : data.subTitle}
         </Text>
         <View style={styles.badgeList}>
-          {data.badge.slice(0, 4).map((item) => (
-            <View key={item.id} style={styles.badgeItem}>
+          {data.badge.slice(0, 4).map((item, idx) => (
+            <View key={idx} style={styles.badgeItem}>
               <Badge id={item.id} name={item.name} />
             </View>
           ))}

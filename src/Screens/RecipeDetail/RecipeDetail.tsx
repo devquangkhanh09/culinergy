@@ -152,8 +152,8 @@ export default function RecipeDetail({
         <View style={styles.contentList}>
           <Text style={styles.textSubHeader}>Ingredients</Text>
           <View>
-            {recipeData.ingredients.map((ingredient) => (
-              <View key={ingredient._id} style={styles.ingredientRow}>
+            {recipeData.ingredients.map((ingredient, idx) => (
+              <View key={idx} style={styles.ingredientRow}>
                 <Text style={styles.textItem}>{ingredient.name}</Text>
                 {userProfile.allergies.find((allergy) => (allergy._id === ingredient._id)) && (
                   <Icon name="exclamation-circle" size={20} color="red" />
