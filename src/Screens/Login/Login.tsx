@@ -25,9 +25,13 @@ type LoginScreenNavigatorProps = NativeStackScreenProps<
   AuthScreens.LOGIN
 >;
 
+const showPasswordIcon = require('../../../assets/authentication/show.png')
+const hidePasswordIcon = require('../../../assets/authentication/hidden.png')
+
 export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
   const user = useAppSelector((state) => state.user);
   const isFirstTime = useAppSelector((state) => state.firstTime.isFirstTime);
+  const [showPassword, setShowPassword] = useState(false)
   const [isClickedLogin, setIsClickedLogin] = useState(false)
 
   const [login, { data, error, isLoading }] = useLoginMutation();
@@ -110,18 +114,25 @@ export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
             value={email}
             onChangeText={setEmail}
           />
-          <TextInput
-            style={{
-              height: 50,
-              borderWidth: 1,
-              borderRadius: 10,
-              paddingLeft: 25,
-            }}
-            placeholder="Password"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
+          <View style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 10 }}>
+            <TextInput
+              style={{
+                height: 50,
+                paddingLeft: 25,
+                flexGrow: 1
+              }}
+              placeholder="Password"
+              secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={setPassword}
+            />
+            <Pressable onPress={() => setShowPassword(!showPassword)} style={{ marginHorizontal: 10 }}>
+              <Image
+                source={showPassword ? hidePasswordIcon : showPasswordIcon}
+                style={{ height: 30, width: 30 }}
+              />
+            </Pressable>
+          </View>
           <View
             style={{
               alignItems: 'flex-end',
@@ -182,7 +193,10 @@ export const Login = ({ navigation }: LoginScreenNavigatorProps) => {
             <Text style={{ fontSize: 14 }}>Don't have an account yet? </Text>
             <Text
               style={{ fontSize: 14, fontWeight: '700' }}
-              onPress={() => navigation.navigate(AuthScreens.REGISTER)}>
+              onPress={() => {
+                setIsClickedLogin(false)
+                navigation.navigate(AuthScreens.REGISTER)
+              }}>
               Create one.
             </Text>
           </View>
